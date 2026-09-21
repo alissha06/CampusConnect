@@ -1,9 +1,10 @@
   <footer class="footer">
     <div class="container">
       <div class="footer-grid">
-        <div>
-          <img src="/web_ui_project/CampusConnect/assets/images/sicsr-logo.png" alt="SICSR Logo" style="height:32px; margin-bottom:14px;">
+        <div class="footer-brand">
+          <img src="/web_ui_project/CampusConnect/assets/images/sicsr-logo.png" alt="SICSR Logo" class="footer-logo">
           <p>The official collegiate academic and student administration network dedicated to empowering excellence, transparency, and research leadership.</p>
+          <span class="badge-outline">✓ Accredited Grade 'A++' Institution</span>
         </div>
         <div>
           <h4>Quick Links</h4>
@@ -12,6 +13,7 @@
             <li><a href="#">Admissions 2026</a></li>
             <li><a href="#">Academic Calendar</a></li>
             <li><a href="#">Examination Cell</a></li>
+            <li><a href="#">Campus Directory</a></li>
           </ul>
         </div>
         <div>
@@ -20,20 +22,24 @@
             <li><a href="#">Portal Guide &amp; FAQ</a></li>
             <li><a href="#">Central Library Catalog</a></li>
             <li><a href="#">Campus IT Helpdesk</a></li>
-            <li><a href="#">Download Forms</a></li>
+            <li><a href="#">Download Forms &amp; Proformas</a></li>
+            <li><a href="#">Hostel &amp; Mess Services</a></li>
           </ul>
         </div>
         <div>
-          <h4>Contact</h4>
-          <p>SICSR, Atur Centre, Gokhale Cross Road,<br>Model Colony, Pune - 411016</p>
-          <p>admissions@sicsr.ac.in<br>+91 20 2567 5601</p>
+          <h4>Contact &amp; Affiliation</h4>
+          <p>Symbiosis Institute of Computer Studies and Research (SICSR), Atur Centre, Gokhale Cross Road, Model Colony, Pune - 411016</p>
+          <p>✉ admissions@sicsr.ac.in</p>
+          <p>📞 +91 20 2567 5601 / 5602</p>
+          <p class="footer-affiliation"><strong>SICSR • Symbiosis International (Deemed University)</strong><br>Re-accredited by NAAC with 'A++' Grade</p>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 CampusConnect. All rights reserved.</p>
+        <p>&copy; 2026 CampusConnect SICSR Student Portal. All rights reserved. Designed for student excellence.</p>
         <div>
           <a href="#">Privacy Policy</a> &nbsp;•&nbsp;
-          <a href="#">Terms of Use</a>
+          <a href="#">Terms of Use</a> &nbsp;•&nbsp;
+          <a href="#">Web Accessibility</a>
         </div>
       </div>
     </div>
