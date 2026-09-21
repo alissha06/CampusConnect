@@ -2,7 +2,7 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <img src="/web_ui_project/campusconnect_project/assets/images/sicsr-logo.png" alt="SICSR Logo" style="height:32px; margin-bottom:14px;">
+          <img src="/web_ui_project/CampusConnect/assets/images/sicsr-logo.png" alt="SICSR Logo" style="height:32px; margin-bottom:14px;">
           <p>The official collegiate academic and student administration network dedicated to empowering excellence, transparency, and research leadership.</p>
         </div>
         <div>
@@ -17,7 +17,7 @@
         <div>
           <h4>Student Services</h4>
           <ul>
-            <li><a href="#">Portal Guide & FAQ</a></li>
+            <li><a href="#">Portal Guide &amp; FAQ</a></li>
             <li><a href="#">Central Library Catalog</a></li>
             <li><a href="#">Campus IT Helpdesk</a></li>
             <li><a href="#">Download Forms</a></li>
@@ -38,6 +38,6 @@
       </div>
     </div>
   </footer>
-  <script src="/web_ui_project/campusconnect_project/assets/js/script.js"></script>
+  <script src="/web_ui_project/CampusConnect/assets/js/script.js"></script>
 </body>
 </html>

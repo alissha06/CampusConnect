@@ -23,9 +23,8 @@
 
 <!-- ONE-LINE NOTICE BANNER -->
 <div class="notice-banner">
-  <strong><h4>Latest:</strong> Internal Examination Timetable — BCA Semesters II, IV &amp; VI
-  <br>
-  <a href="notices/index.php">View all Notices →</a></h4>
+  📢 <strong>Latest:</strong> Internal Examination Timetable — BCA Semesters II, IV &amp; VI
+  <a href="notices/index.php">View all Notices →</a>
 </div>
 
 <!-- CORE ESSENTIALS -->

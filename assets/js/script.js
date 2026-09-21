@@ -1,3 +1,6 @@
+// CampusConnect - Main JS
+console.log("CampusConnect script loaded");
+
 // Dropdown menu toggle
 document.addEventListener('DOMContentLoaded', function () {
   const dropdown = document.querySelector('.dropdown');
@@ -9,7 +12,6 @@ document.addEventListener('DOMContentLoaded', function () {
       dropdown.classList.toggle('open');
     });
 
-    // Close dropdown if clicking anywhere else
     document.addEventListener('click', function () {
       dropdown.classList.remove('open');
     });
