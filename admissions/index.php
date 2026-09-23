@@ -17,6 +17,10 @@
     <h2>Admissions Process Overview</h2>
     <p>Securing your admission at SICSR involves a sequence of straightforward, verified milestones. Follow each stage carefully to ensure seamless enrollment.</p>
 
+    <div style="margin: 16px 0 8px;">
+    <a href="checklist.php" class="btn btn-primary">View My Admission Checklist &rarr;</a>
+    </div>
+
     <div class="card-grid four step-grid">
       <div class="essential-card step-card">
         <div>
