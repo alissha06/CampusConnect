@@ -49,3 +49,47 @@ function updateProgress() {
   document.getElementById('progress-number').textContent = percent;
   document.getElementById('progress-caption').textContent = completedItems + ' of ' + totalItems + ' requirements completed';
 }
+
+// Notices - Search & Filter
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('notice-search');
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const noticeCards = document.querySelectorAll('.notice-card');
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+
+  if (!searchInput) return; // only run this on the Notices page
+
+  let activeFilter = 'all';
+
+  function applyFilters() {
+    const query = searchInput.value.toLowerCase().trim();
+    let visibleCount = 0;
+
+    noticeCards.forEach(function (card) {
+      const matchesCategory = activeFilter === 'all' || card.dataset.category === activeFilter;
+      const matchesSearch = card.dataset.title.includes(query);
+
+      if (matchesCategory && matchesSearch) {
+        card.style.display = '';
+        visibleCount++;
+      } else {
+        card.style.display = 'none';
+      }
+    });
+
+    resultsCount.textContent = visibleCount;
+    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+
+  searchInput.addEventListener('input', applyFilters);
+
+  filterPills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      filterPills.forEach(function (p) { p.classList.remove('active'); });
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      applyFilters();
+    });
+  });
+});
