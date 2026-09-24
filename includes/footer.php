@@ -2,15 +2,15 @@
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/web_ui_project/CampusConnect/assets/images/sicsr-logo.png" alt="SICSR Logo" class="footer-logo">
+          <img src="<?php echo $root; ?>assets/images/sicsr-logo.png" alt="SICSR Logo" class="footer-logo">
           <p>The official collegiate academic and student administration network dedicated to empowering excellence, transparency, and research leadership.</p>
           <span class="badge-outline">✓ Accredited Grade 'A++' Institution</span>
         </div>
         <div>
           <h4>Quick Links</h4>
           <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Admissions 2026</a></li>
+            <li><a href="<?php echo $root; ?>about/index.php">About Us</a></li>
+            <li><a href="<?php echo $root; ?>admissions/index.php">Admissions</a></li>
             <li><a href="#">Academic Calendar</a></li>
             <li><a href="#">Examination Cell</a></li>
             <li><a href="#">Campus Directory</a></li>
@@ -35,7 +35,7 @@
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 CampusConnect SICSR Student Portal. All rights reserved. Designed for student excellence.</p>
+        <p>&copy; 2026 CampusConnect SICSR Student Portal. All rights reserved.</p>
         <div>
           <a href="#">Privacy Policy</a> &nbsp;•&nbsp;
           <a href="#">Terms of Use</a> &nbsp;•&nbsp;
@@ -44,6 +44,6 @@
       </div>
     </div>
   </footer>
-  <script src="/web_ui_project/CampusConnect/assets/js/script.js"></script>
+  <script src="<?php echo $root; ?>assets/js/script.js"></script>
 </body>
 </html>

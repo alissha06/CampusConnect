@@ -122,12 +122,61 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 // Event Registration - Confirmation Toast
-function registerEvent(eventName) {
+// Event Registration Modal
+let currentEventName = '';
+
+function openRegisterModal(eventName) {
+  currentEventName = eventName;
+  document.getElementById('modal-event-name').textContent = eventName;
+  document.getElementById('register-modal').classList.add('show');
+  document.getElementById('register-form').reset();
+}
+
+function closeRegisterModal() {
+  document.getElementById('register-modal').classList.remove('show');
+}
+
+function submitRegistration(e) {
+  e.preventDefault();
+  const name = document.getElementById('reg-name').value;
+  closeRegisterModal();
+
   const toast = document.getElementById('register-toast');
-  if (!toast) return;
-  toast.textContent = '✓ You have registered for "' + eventName + '"';
+  toast.textContent = '✓ Thanks ' + name + '! You\'re registered for "' + currentEventName + '"';
   toast.classList.add('show');
   setTimeout(function () {
     toast.classList.remove('show');
-  }, 3500);
+  }, 4000);
 }
+
+document.addEventListener('click', function (e) {
+  const overlay = document.getElementById('register-modal');
+  if (overlay && e.target === overlay) {
+    closeRegisterModal();
+  }
+});
+
+// Events - Search Filter
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('event-search');
+  const eventCards = document.querySelectorAll('.event-card');
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+      eventCards.forEach(function (card) {
+        if (card.dataset.title.includes(query)) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      resultsCount.textContent = visibleCount;
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+  }
+});

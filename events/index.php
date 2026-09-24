@@ -1,10 +1,11 @@
+<?php $root = '../'; ?>
 <?php include '../includes/header.php'; ?>
 <?php include '../includes/navbar.php'; ?>
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
   <div class="container">
-    <a href="../index.php">Portal Home</a> / <span>Events &amp; Activities</span>
+    <a href="<?php echo $root; ?>index.php">Portal Home</a> / <span>Events &amp; Activities</span>
   </div>
 </div>
 
@@ -27,7 +28,6 @@
     </div>
     <p class="results-count"><span id="results-count">4</span> upcoming events</p>
 
-    <!-- EVENT CARDS -->
     <div class="event-grid" id="event-grid">
 
       <div class="event-card" data-title="annual tech fest codesphere">
@@ -44,7 +44,7 @@
         </div>
         <div class="event-actions">
           <a href="details.php?event=codesphere" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="registerEvent('Annual Tech Fest \'CodeSphere\'')">Register &rarr;</button>
+          <button class="btn-mark-complete" onclick="openRegisterModal('Annual Tech Fest \'CodeSphere\'')">Register &rarr;</button>
         </div>
       </div>
 
@@ -62,7 +62,7 @@
         </div>
         <div class="event-actions">
           <a href="details.php?event=cloud-lecture" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="registerEvent('Guest Lecture: Careers in Cloud Computing')">Register &rarr;</button>
+          <button class="btn-mark-complete" onclick="openRegisterModal('Guest Lecture: Careers in Cloud Computing')">Register &rarr;</button>
         </div>
       </div>
 
@@ -80,7 +80,7 @@
         </div>
         <div class="event-actions">
           <a href="details.php?event=sports-meet" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="registerEvent('Inter-College Sports Meet')">Register &rarr;</button>
+          <button class="btn-mark-complete" onclick="openRegisterModal('Inter-College Sports Meet')">Register &rarr;</button>
         </div>
       </div>
 
@@ -98,7 +98,7 @@
         </div>
         <div class="event-actions">
           <a href="details.php?event=data-science-workshop" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="registerEvent('Workshop: Intro to Data Science')">Register &rarr;</button>
+          <button class="btn-mark-complete" onclick="openRegisterModal('Workshop: Intro to Data Science')">Register &rarr;</button>
         </div>
       </div>
 
@@ -115,7 +115,36 @@
   </div>
 </section>
 
-<!-- CONFIRMATION TOAST (hidden by default) -->
+<!-- REGISTRATION MODAL -->
+<div id="register-modal" class="modal-overlay">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeRegisterModal()">&times;</button>
+    <h3>Register for <span id="modal-event-name"></span></h3>
+    <p class="modal-subtext">Fill in your details to reserve your spot.</p>
+    <form id="register-form" onsubmit="submitRegistration(event)">
+      <div class="form-group">
+        <label for="reg-name">Full Name</label>
+        <input type="text" id="reg-name" required placeholder="Your full name">
+      </div>
+      <div class="form-group">
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label for="reg-dept">Department</label>
+        <select id="reg-dept" required>
+          <option value="">Select department</option>
+          <option>BCA</option>
+          <option>BBA (IT)</option>
+          <option>MSc (CA)</option>
+          <option>MBA (IT)</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;">Confirm Registration</button>
+    </form>
+  </div>
+</div>
+
 <div id="register-toast" class="toast"></div>
 
 <?php include '../includes/footer.php'; ?>
