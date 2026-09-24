@@ -70,15 +70,15 @@
       </div>
 
       <div class="notice-card" data-category="events" data-title="annual tech fest codesphere registrations open">
-        <span class="notice-tag events">Events</span>
-        <h3>Annual Tech Fest 'CodeSphere' Registrations Open</h3>
-        <p>Hackathons, coding challenges, UI design sprint, and project exhibitions. Early bird registrations open now.</p>
-        <div class="notice-meta">
-          <span>📅 Recent</span>
-          <a href="#" class="notice-link">Read More &rarr;</a>
-        </div>
-      </div>
-
+    <span class="notice-tag events">Events</span>
+    <h3>Annual Tech Fest 'CodeSphere' Registrations Open</h3>
+    <p>Hackathons, coding challenges, UI design sprint, and project exhibitions. Early bird registrations open now.</p>
+    <div class="notice-meta">
+    <span>📅 Recent</span>
+    <a href="../events/details.php?event=codesphere" class="notice-link">View Event &rarr;</a>
+    </div>
+    </div>
+    
       <div class="notice-card" data-category="placement" data-title="campus recruitment drive internship openings">
         <span class="notice-tag placement">Placement</span>
         <h3>Campus Recruitment Drive — Internship Openings</h3>

@@ -93,3 +93,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+// Events - Search Filter
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('event-search');
+  const eventCards = document.querySelectorAll('.event-card');
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      const query = searchInput.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      eventCards.forEach(function (card) {
+        if (card.dataset.title.includes(query)) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      resultsCount.textContent = visibleCount;
+      noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+    });
+  }
+});
+
+// Event Registration - Confirmation Toast
+function registerEvent(eventName) {
+  const toast = document.getElementById('register-toast');
+  if (!toast) return;
+  toast.textContent = '✓ You have registered for "' + eventName + '"';
+  toast.classList.add('show');
+  setTimeout(function () {
+    toast.classList.remove('show');
+  }, 3500);
+}
