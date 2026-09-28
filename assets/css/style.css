@@ -1741,3 +1741,50 @@ img {
   .form-row { grid-template-columns: 1fr; }
   .form-card { padding: 22px; }
 }
+
+/* ===== Feedback: star rating ===== */
+.rating-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 10px 18px;
+}
+
+.star-row {
+  display: flex;
+  gap: 4px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  font-size: 2rem;
+  line-height: 1;
+  color: #D1D5DB;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-btn:hover {
+  transform: scale(1.1);
+}
+
+.star-btn.filled {
+  color: var(--color-accent);
+}
+
+.rating-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+}
+
+.rating-label.chosen {
+  color: var(--color-primary);
+}

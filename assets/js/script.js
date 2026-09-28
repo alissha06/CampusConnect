@@ -393,3 +393,96 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.field-error').forEach(function (el) { el.textContent = ''; });
   });
 });
+
+// ===== Feedback form =====
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('feedback-form');
+  if (!form) return;
+
+  const stars = document.querySelectorAll('.star-btn');
+  const ratingInput = document.getElementById('fb-rating');
+  const ratingLabel = document.getElementById('rating-label');
+  const message = document.getElementById('fb-message');
+  const counter = document.getElementById('fb-char-count');
+  const successBox = document.getElementById('fb-success');
+  const labels = ['Select a rating', 'Poor', 'Fair', 'Good', 'Very good', 'Excellent'];
+
+  function setError(id, text) {
+    document.getElementById(id).textContent = text;
+  }
+
+  function currentRating() {
+    return parseInt(ratingInput.value, 10) || 0;
+  }
+
+  function paint(count) {
+    stars.forEach(function (star, i) {
+      star.classList.toggle('filled', i < count);
+    });
+  }
+
+  function setRating(count) {
+    ratingInput.value = count || '';
+    paint(count);
+    ratingLabel.textContent = labels[count];
+    ratingLabel.classList.toggle('chosen', count > 0);
+  }
+
+  // Star rating: click to choose, hover to preview
+  stars.forEach(function (star, i) {
+    star.addEventListener('click', function () {
+      setRating(i + 1);
+      setError('fb-err-rating', '');
+    });
+    star.addEventListener('mouseenter', function () { paint(i + 1); });
+    star.addEventListener('mouseleave', function () { paint(currentRating()); });
+  });
+
+  // Character counter
+  message.addEventListener('input', function () {
+    counter.textContent = message.value.length;
+  });
+
+  // Validation
+  function validate() {
+    const name = document.getElementById('fb-name').value.trim();
+    const email = document.getElementById('fb-email').value.trim();
+    const category = document.getElementById('fb-category').value;
+    const text = message.value.trim();
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const nameError = name ? '' : 'Please enter your name.';
+    const emailError = emailPattern.test(email) ? '' : 'Please enter a valid email address.';
+    const categoryError = category ? '' : 'Please select a category.';
+    const ratingError = currentRating() > 0 ? '' : 'Please choose a rating.';
+    const messageError = text.length >= 10 ? '' : 'Please write at least 10 characters.';
+
+    setError('fb-err-name', nameError);
+    setError('fb-err-email', emailError);
+    setError('fb-err-category', categoryError);
+    setError('fb-err-rating', ratingError);
+    setError('fb-err-message', messageError);
+
+    return !(nameError || emailError || categoryError || ratingError || messageError);
+  }
+
+  // Submit (frontend only for now)
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    successBox.style.display = 'none';
+    if (!validate()) return;
+
+    form.reset();
+    successBox.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Clear form (also runs after a successful submit)
+  form.addEventListener('reset', function () {
+    setRating(0);
+    counter.textContent = '0';
+    document.querySelectorAll('#feedback-form .field-error').forEach(function (el) {
+      el.textContent = '';
+    });
+  });
+});
