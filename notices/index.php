@@ -1,4 +1,9 @@
 <?php $root = '../'; ?>
+<?php
+require_once '../includes/db.php';
+$stmt = $pdo->query("SELECT id, title, description, category, posted_at FROM notices ORDER BY posted_at DESC");
+$notices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
 <?php include '../includes/header.php'; ?>
 <?php include '../includes/navbar.php'; ?>
 
@@ -35,74 +40,29 @@
       </div>
     </div>
 
-    <p class="results-count"><span id="results-count">6</span> notices found</p>
+    <p class="results-count"><span id="results-count"><?= count($notices) ?></span> notices found</p>
 
     <!-- NOTICE LIST -->
-    <div class="notice-list" id="notice-list">
-
-      <div class="notice-card" data-category="examination" data-title="internal examination timetable bca semesters ii iv vi">
-        <span class="notice-tag examination">Examination</span>
-        <h3>Internal Examination Timetable — BCA Semesters II, IV &amp; VI</h3>
-        <p>Schedule for continuous internal assessments, practical submissions, and theory examination dates.</p>
-        <div class="notice-meta">
-          <span>📅 Latest Update</span>
-          <a href="#" class="notice-link">Read More &rarr;</a>
-        </div>
-      </div>
-
-      <div class="notice-card" data-category="general" data-title="admission document submission deadline">
-        <span class="notice-tag general">General</span>
-        <h3>Admission Document Submission Deadline</h3>
-        <p>Mandatory physical document verification and anti-ragging declaration submission deadline.</p>
-        <div class="notice-meta">
-          <span>📅 Recent</span>
-          <a href="#" class="notice-link">Read More &rarr;</a>
-        </div>
-      </div>
-
-      <div class="notice-card" data-category="academic" data-title="workshop on cloud computing announced">
-        <span class="notice-tag academic">Academic</span>
-        <h3>Workshop on Cloud Computing Announced</h3>
-        <p>Hands-on workshop on cloud architecture, open to all second and final year students.</p>
-        <div class="notice-meta">
-          <span>📅 Recent</span>
-          <a href="#" class="notice-link">Read More &rarr;</a>
-        </div>
-      </div>
-
-      <div class="notice-card" data-category="events" data-title="annual tech fest codesphere registrations open">
-    <span class="notice-tag events">Events</span>
-    <h3>Annual Tech Fest 'CodeSphere' Registrations Open</h3>
-    <p>Hackathons, coding challenges, UI design sprint, and project exhibitions. Early bird registrations open now.</p>
-    <div class="notice-meta">
-    <span>📅 Recent</span>
-    <a href="../events/details.php?event=codesphere" class="notice-link">View Event &rarr;</a>
-    </div>
-    </div>
     
-      <div class="notice-card" data-category="placement" data-title="campus recruitment drive internship openings">
-        <span class="notice-tag placement">Placement</span>
-        <h3>Campus Recruitment Drive — Internship Openings</h3>
-        <p>Registrations open for the upcoming placement drive. Eligible final-year students can apply through the Placement Cell.</p>
+      <div class="notice-list" id="notice-list">
+      <?php foreach ($notices as $n):
+        $cat = $n['category'];
+         $dataTitle = trim(preg_replace('/[^a-z0-9]+/', ' ', strtolower($n['title'])));
+        ?>
+      <div class="notice-card" data-category="<?= htmlspecialchars($cat) ?>" data-title="<?= htmlspecialchars($dataTitle) ?>">
+        <span class="notice-tag <?= htmlspecialchars($cat) ?>"><?= htmlspecialchars(ucfirst($cat)) ?></span>
+        <h3><?= htmlspecialchars($n['title']) ?></h3>
+        <p><?= htmlspecialchars($n['description']) ?></p>
         <div class="notice-meta">
-          <span>📅 Recent</span>
-          <a href="#" class="notice-link">Read More &rarr;</a>
+          <span>📅 <?= date('d M Y', strtotime($n['posted_at'])) ?></span>
+          <a href="details.php?id=<?= (int)$n['id'] ?>" class="notice-link">Read More &rarr;</a>
         </div>
       </div>
-
-      <div class="notice-card" data-category="general" data-title="library timings revised for exam season">
-        <span class="notice-tag general">General</span>
-        <h3>Library Timings Revised for Exam Season</h3>
-        <p>Reference and reading halls will have extended hours on all weekdays and Saturdays through the examination cycle.</p>
-        <div class="notice-meta">
-          <span>📅 Recent</span>
-          <a href="#" class="notice-link">Read More &rarr;</a>
-        </div>
-      </div>
-
+        <?php endforeach; ?>
     </div>
 
     <p class="no-results" id="no-results" style="display:none;">No notices match your search.</p>
+
   </div>
 </section>
 
