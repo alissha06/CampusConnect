@@ -15,7 +15,6 @@
         <button class="dropdown-toggle">More <span class="arrow">▾</span></button>
         <ul class="dropdown-menu">
           <li><a href="<?php echo $root; ?>events/index.php">Events</a></li>
-          <li><a href="<?php echo $root; ?>resources/index.php">Resources</a></li>
           <li><a href="<?php echo $root; ?>feedback/index.php">Feedback</a></li>
         </ul>
       </li>

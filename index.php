@@ -64,13 +64,13 @@
         <a href="events/index.php" class="card-link">Explore Schedule →</a>
       </div>
       <div class="essential-card">
-        <div>
-          <div class="icon">📚</div>
-          <h3>Resources</h3>
-          <p>BCA syllabus, semester lecture notes, previous year papers, and lab manuals.</p>
-        </div>
-        <a href="resources/index.php" class="card-link">Access Repository →</a>
-      </div>
+    <div>
+      <div class="icon">🔍</div>
+      <h3>Lost &amp; Found</h3>
+      <p>Report a lost item or browse found items posted by fellow students across campus.</p>
+    </div>
+    <a href="lostfound/index.php" class="card-link">Browse Items &rarr;</a>
+  </div>
     </div>
   </div>
 </section>

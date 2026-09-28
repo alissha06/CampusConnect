@@ -180,3 +180,216 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+// ===== Lost & Found: browse page (search, filter, details popup) =====
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('item-search');
+  if (!searchInput) return;
+
+  const pills = document.querySelectorAll('#item-filter-pills .filter-pill');
+  const cards = document.querySelectorAll('.item-card');
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+  let activeFilter = 'all';
+
+  function applyItemFilters() {
+    const query = searchInput.value.toLowerCase().trim();
+    let visible = 0;
+    cards.forEach(function (card) {
+      const matchesType = activeFilter === 'all' || card.dataset.type === activeFilter;
+      const matchesSearch = card.dataset.search.includes(query);
+      const show = matchesType && matchesSearch;
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    resultsCount.textContent = visible;
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  searchInput.addEventListener('input', applyItemFilters);
+  pills.forEach(function (pill) {
+    pill.addEventListener('click', function () {
+      pills.forEach(function (p) { p.classList.remove('active'); });
+      pill.classList.add('active');
+      activeFilter = pill.dataset.filter;
+      applyItemFilters();
+    });
+  });
+});
+
+function openItemModal(button) {
+  const card = button.closest('.item-card');
+  const tag = document.getElementById('item-modal-tag');
+  tag.textContent = card.dataset.type === 'lost' ? 'Lost' : 'Found';
+  tag.className = 'item-type-tag inline ' + card.dataset.type;
+  document.getElementById('item-modal-title').textContent = card.dataset.name;
+  document.getElementById('item-modal-desc').textContent = card.dataset.desc;
+  document.getElementById('item-modal-location').textContent = card.dataset.location;
+  document.getElementById('item-modal-date').textContent = card.dataset.date;
+  document.getElementById('item-modal-contact').textContent = card.dataset.contact;
+  document.getElementById('item-modal').classList.add('show');
+}
+
+function closeItemModal() {
+  document.getElementById('item-modal').classList.remove('show');
+}
+
+document.addEventListener('click', function (e) {
+  const modal = document.getElementById('item-modal');
+  if (modal && e.target === modal) closeItemModal();
+});
+
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('item-modal');
+    if (modal) closeItemModal();
+  }
+});
+
+// ===== Lost & Found: post form =====
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('post-item-form');
+  if (!form) return;
+
+  // Set to e.g. '@sicsr.ac.in' once you confirm the college email domain
+  const ALLOWED_EMAIL_DOMAIN = '';
+  const MAX_PHOTO_MB = 5;
+
+  const typeInput = document.getElementById('item-type');
+  const typeButtons = document.querySelectorAll('.type-option');
+  const locationLabel = document.getElementById('location-label');
+  const dateLabel = document.getElementById('date-label');
+  const dateInput = document.getElementById('item-date');
+  const descInput = document.getElementById('item-desc');
+  const charCount = document.getElementById('char-count');
+  const photoInput = document.getElementById('item-photo');
+  const zone = document.getElementById('upload-zone');
+  const preview = document.getElementById('upload-preview');
+  const previewImg = document.getElementById('preview-img');
+  const successBox = document.getElementById('form-success');
+
+  // Dates cannot be in the future
+  dateInput.max = new Date().toISOString().split('T')[0];
+
+  // Lost / Found toggle
+  typeButtons.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      typeButtons.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
+      typeInput.value = btn.dataset.type;
+      const word = btn.dataset.type === 'lost' ? 'lost' : 'found';
+      locationLabel.textContent = 'Location ' + word;
+      dateLabel.textContent = 'Date ' + word;
+    });
+  });
+
+  // Character counter
+  descInput.addEventListener('input', function () {
+    charCount.textContent = descInput.value.length;
+  });
+
+  // Photo preview
+  function showPhoto(file) {
+    setError('err-photo', '');
+    if (!file) { clearPhoto(); return; }
+    const okTypes = ['image/png', 'image/jpeg', 'image/webp'];
+    if (okTypes.indexOf(file.type) === -1) {
+      setError('err-photo', 'Please choose a PNG, JPG or WEBP image.');
+      clearPhoto();
+      return;
+    }
+    if (file.size > MAX_PHOTO_MB * 1024 * 1024) {
+      setError('err-photo', 'Photo must be under ' + MAX_PHOTO_MB + ' MB.');
+      clearPhoto();
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      previewImg.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearPhoto() {
+    photoInput.value = '';
+    previewImg.src = '';
+    preview.style.display = 'none';
+  }
+
+  photoInput.addEventListener('change', function () { showPhoto(photoInput.files[0]); });
+  document.getElementById('remove-photo').addEventListener('click', clearPhoto);
+
+  // Drag and drop
+  ['dragenter', 'dragover'].forEach(function (evt) {
+    zone.addEventListener(evt, function (e) { e.preventDefault(); zone.classList.add('dragging'); });
+  });
+  ['dragleave', 'drop'].forEach(function (evt) {
+    zone.addEventListener(evt, function (e) { e.preventDefault(); zone.classList.remove('dragging'); });
+  });
+  zone.addEventListener('drop', function (e) {
+    if (e.dataTransfer.files.length) {
+      photoInput.files = e.dataTransfer.files;
+      showPhoto(photoInput.files[0]);
+    }
+  });
+
+  // Validation helpers
+  function setError(id, message) {
+    document.getElementById(id).textContent = message;
+  }
+
+  function validate() {
+    let ok = true;
+    const name = document.getElementById('item-name').value.trim();
+    const category = document.getElementById('item-category').value;
+    const desc = descInput.value.trim();
+    const location = document.getElementById('item-location').value.trim();
+    const date = dateInput.value;
+    const email = document.getElementById('item-email').value.trim();
+
+    setError('err-name', name ? '' : 'Please enter the item name.');
+    setError('err-category', category ? '' : 'Please select a category.');
+    setError('err-desc', desc.length >= 10 ? '' : 'Please add a short description (at least 10 characters).');
+    setError('err-location', location ? '' : 'Please enter a location.');
+    setError('err-date', date ? '' : 'Please choose a date.');
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    let emailMessage = '';
+    if (!emailPattern.test(email)) {
+      emailMessage = 'Please enter a valid email address.';
+    } else if (ALLOWED_EMAIL_DOMAIN && !email.toLowerCase().endsWith(ALLOWED_EMAIL_DOMAIN)) {
+      emailMessage = 'Please use your college email (' + ALLOWED_EMAIL_DOMAIN + ').';
+    }
+    setError('err-email', emailMessage);
+
+    if (!name || !category || desc.length < 10 || !location || !date || emailMessage) ok = false;
+    return ok;
+  }
+
+  // Submit (frontend only for now)
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    successBox.style.display = 'none';
+    if (!validate()) return;
+
+    form.reset();
+    clearPhoto();
+    charCount.textContent = '0';
+    typeButtons.forEach(function (b) { b.classList.remove('active'); });
+    typeButtons[0].classList.add('active');
+    typeInput.value = 'lost';
+    locationLabel.textContent = 'Location lost';
+    dateLabel.textContent = 'Date lost';
+
+    successBox.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // Clear form button
+  form.addEventListener('reset', function () {
+    clearPhoto();
+    charCount.textContent = '0';
+    document.querySelectorAll('.field-error').forEach(function (el) { el.textContent = ''; });
+  });
+});
