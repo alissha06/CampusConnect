@@ -397,23 +397,43 @@ document.addEventListener('DOMContentLoaded', function () {
     return ok;
   }
 
-  // Submit (frontend only for now)
+
+   // Submit: send the form to submit.php with fetch, using FormData for the photo
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     successBox.style.display = 'none';
     if (!validate()) return;
 
-    form.reset();
-    clearPhoto();
-    charCount.textContent = '0';
-    typeButtons.forEach(function (b) { b.classList.remove('active'); });
-    typeButtons[0].classList.add('active');
-    typeInput.value = 'lost';
-    locationLabel.textContent = 'Location lost';
-    dateLabel.textContent = 'Date lost';
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
 
-    successBox.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetch('submit.php', {
+      method: 'POST',
+      body: new FormData(form)   // reads every named field, including the file, automatically
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        submitBtn.disabled = false;
+        if (!data.ok) {
+          alert(data.errors.join('\n'));   // simple for now; can be styled later
+          return;
+        }
+        form.reset();
+        clearPhoto();
+        charCount.textContent = '0';
+        typeButtons.forEach(function (b) { b.classList.remove('active'); });
+        typeButtons[0].classList.add('active');
+        typeInput.value = 'lost';
+        locationLabel.textContent = 'Location lost';
+        dateLabel.textContent = 'Date lost';
+
+        successBox.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        alert('Something went wrong. Please try again.');
+      });
   });
 
   // Clear form button

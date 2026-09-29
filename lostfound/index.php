@@ -3,15 +3,17 @@
 <?php include '../includes/navbar.php'; ?>
 
 <?php
-// Sample data. Sneha can replace this array with rows from MySQL later.
-$items = [
-  ['type' => 'found', 'icon' => '🎧', 'name' => 'Black Wireless Earbuds', 'desc' => 'Charging case with Bluetooth earbuds inside.', 'location' => 'Library', 'date' => 'Posted recently', 'contact' => 'demo.student@example.com'],
-  ['type' => 'lost',  'icon' => '🧴', 'name' => 'Blue Water Bottle', 'desc' => 'Insulated steel bottle with a small dent near the base.', 'location' => 'Computer Lab', 'date' => 'Posted recently', 'contact' => 'demo.student@example.com'],
-  ['type' => 'found', 'icon' => '🪪', 'name' => 'Student ID Card', 'desc' => 'Student ID card in a transparent lanyard sleeve.', 'location' => 'Canteen', 'date' => 'Posted recently', 'contact' => 'demo.student@example.com'],
-  ['type' => 'lost',  'icon' => '🧮', 'name' => 'Scientific Calculator', 'desc' => 'Scientific calculator with a name written on the back cover.', 'location' => 'Seminar Hall', 'date' => 'Posted recently', 'contact' => 'demo.student@example.com'],
-  ['type' => 'found', 'icon' => '👕', 'name' => 'Grey Hoodie', 'desc' => 'Grey zipper hoodie left on a bench.', 'location' => 'Main Corridor', 'date' => 'Posted recently', 'contact' => 'demo.student@example.com'],
-  ['type' => 'lost',  'icon' => '🔑', 'name' => 'Set of Keys', 'desc' => 'Set of keys with a red keychain.', 'location' => 'Parking Area', 'date' => 'Posted recently', 'contact' => 'demo.student@example.com'],
-];
+require_once '../includes/db.php';
+$stmt = $pdo->query("SELECT * FROM lost_found WHERE status = 'open' ORDER BY posted_at DESC");
+$items = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+function item_icon($category) {
+    $icons = [
+        'Electronics' => '🎧', 'Accessories' => '🧴', 'Documents & ID' => '🪪',
+        'Clothing' => '👕', 'Books & Stationery' => '📚',
+    ];
+    return $icons[$category] ?? '📦';
+}
 ?>
 
 <!-- BREADCRUMB -->
@@ -47,35 +49,39 @@ $items = [
       </div>
     </div>
 
-    <p class="results-count"><span id="results-count"><?php echo count($items); ?></span> items listed</p>
-
+   <p class="results-count"><span id="results-count"><?= count($items) ?></span> items listed</p>
+   
     <!-- ITEM CARDS -->
     <div class="item-grid" id="item-grid">
-      <?php foreach ($items as $item): ?>
-      <div class="item-card"
-           data-type="<?php echo $item['type']; ?>"
-           data-search="<?php echo htmlspecialchars(strtolower($item['name'] . ' ' . $item['desc'] . ' ' . $item['location'])); ?>"
-           data-name="<?php echo htmlspecialchars($item['name']); ?>"
-           data-desc="<?php echo htmlspecialchars($item['desc']); ?>"
-           data-location="<?php echo htmlspecialchars($item['location']); ?>"
-           data-date="<?php echo htmlspecialchars($item['date']); ?>"
-           data-contact="<?php echo htmlspecialchars($item['contact']); ?>">
-        <div class="item-photo">
-          <span class="item-type-tag <?php echo $item['type']; ?>"><?php echo ucfirst($item['type']); ?></span>
-          <span class="item-photo-icon"><?php echo $item['icon']; ?></span>
-        </div>
-        <div class="item-body">
-          <h3><?php echo htmlspecialchars($item['name']); ?></h3>
-          <p><?php echo htmlspecialchars($item['desc']); ?></p>
-          <div class="item-meta">
-            <div>📍 <?php echo htmlspecialchars($item['location']); ?></div>
-            <div>📅 <?php echo htmlspecialchars($item['date']); ?></div>
-          </div>
-          <button class="btn-outline-block" onclick="openItemModal(this)">View Details</button>
-        </div>
-      </div>
-      <?php endforeach; ?>
+<?php foreach ($items as $item): ?>
+  <div class="item-card"
+       data-type="<?= htmlspecialchars($item['type']) ?>"
+       data-search="<?= htmlspecialchars(strtolower($item['item_name'] . ' ' . $item['description'] . ' ' . $item['location'])) ?>"
+       data-name="<?= htmlspecialchars($item['item_name']) ?>"
+       data-desc="<?= htmlspecialchars($item['description']) ?>"
+       data-location="<?= htmlspecialchars($item['location']) ?>"
+       data-date="<?= htmlspecialchars(date('d M Y', strtotime($item['item_date']))) ?>"
+       data-contact="<?= htmlspecialchars($item['contact']) ?>">
+    <div class="item-photo">
+      <span class="item-type-tag <?= htmlspecialchars($item['type']) ?>"><?= ucfirst($item['type']) ?></span>
+      <?php if (!empty($item['photo_path'])): ?>
+        <img src="../<?= htmlspecialchars($item['photo_path']) ?>" alt="<?= htmlspecialchars($item['item_name']) ?>" class="item-photo-img">
+      <?php else: ?>
+        <span class="item-photo-icon"><?= item_icon($item['category']) ?></span>
+      <?php endif; ?>
     </div>
+    <div class="item-body">
+      <h3><?= htmlspecialchars($item['item_name']) ?></h3>
+      <p><?= htmlspecialchars($item['description']) ?></p>
+      <div class="item-meta">
+        <div>📍 <?= htmlspecialchars($item['location']) ?></div>
+        <div>📅 <?= htmlspecialchars(date('d M Y', strtotime($item['item_date']))) ?></div>
+      </div>
+      <button class="btn-outline-block" onclick="openItemModal(this)">View Details</button>
+    </div>
+  </div>
+<?php endforeach; ?>
+</div>
 
     <p class="no-results" id="no-results" style="display:none;">No items match your search.</p>
   </div>
