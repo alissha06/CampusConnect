@@ -516,17 +516,36 @@ document.addEventListener('DOMContentLoaded', function () {
     return !(nameError || emailError || categoryError || ratingError || messageError);
   }
 
-  // Submit (frontend only for now)
+    // Submit: send the form to submit.php
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     successBox.style.display = 'none';
     if (!validate()) return;
 
-    form.reset();
-    successBox.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
 
+    fetch('submit.php', {
+      method: 'POST',
+      body: new FormData(form)
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        submitBtn.disabled = false;
+        if (!data.ok) {
+          alert(data.errors.join('\n'));
+          return;
+        }
+        form.reset();
+        successBox.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        alert('Something went wrong. Please try again.');
+      });
+  });
+  
   // Clear form (also runs after a successful submit)
   form.addEventListener('reset', function () {
     setRating(0);
