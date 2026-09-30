@@ -24,7 +24,7 @@
     <div class="form-card">
 
       <div class="form-success" id="form-success" style="display:none;">
-        ✓ Your post has been submitted. (Demo only: nothing is saved yet.)
+        ✓ Your post has been submitted. 
       </div>
 
       <form id="post-item-form" method="post" enctype="multipart/form-data" novalidate>

@@ -24,7 +24,7 @@
     <div class="form-card">
 
       <div class="form-success" id="fb-success" style="display:none;">
-        ✓ Thank you for your feedback! (Demo only: nothing is saved yet.)
+         Thank you for your feedback! 
       </div>
 
       <form id="feedback-form" method="post" novalidate>
