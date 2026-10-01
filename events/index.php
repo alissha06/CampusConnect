@@ -51,7 +51,7 @@ include '../includes/navbar.php';
     </div>
     <div class="event-actions">
       <a href="details.php?event=<?= urlencode($e['slug']) ?>" class="btn-outline-sm">View Details</a>
-      <button class="btn-mark-complete" onclick="openRegisterModal('<?= addslashes($e['title']) ?>', '<?= addslashes($e['slug']) ?>')">Register &rarr;</button>
+      <button class="btn-mark-complete" onclick="openRegisterModal('<?= htmlspecialchars(addslashes($e['title'])) ?>', '<?= htmlspecialchars(addslashes($e['slug'])) ?>')">Register &rarr;</button>
     </div>
   </div>
 <?php endforeach; ?>
