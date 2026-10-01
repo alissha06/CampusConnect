@@ -46,7 +46,7 @@ include '../includes/navbar.php';
         <div class="event-info-row">🕒 <span><?php echo $event['event_time']; ?></span></div>
         <div class="event-info-row">📍 <span><?php echo $event['venue']; ?></span></div>
         <div class="event-info-row">🎟 <span><?php echo $event['seats_info']; ?></span></div>
-        <button class="btn btn-primary" style="width:100%; margin-top:16px;" onclick="openRegisterModal('<?php echo addslashes($event['title']); ?>')">Register Now</button>
+        <button class="btn btn-primary" style="width:100%; margin-top:16px;" onclick="openRegisterModal('<?= addslashes($event['title']) ?>', '<?= addslashes($event['slug']) ?>')">Register Now</button>
       </div>
     </div>
   </div>

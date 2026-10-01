@@ -153,10 +153,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // Event Registration - Confirmation Toast
 // Event Registration Modal
-let currentEventName = '';
 
-function openRegisterModal(eventName) {
-  currentEventName = eventName;
+let currentEventSlug = '';
+
+function openRegisterModal(eventName, eventSlug) {
+  currentEventSlug = eventSlug;
   document.getElementById('modal-event-name').textContent = eventName;
   document.getElementById('register-modal').classList.add('show');
   document.getElementById('register-form').reset();
@@ -168,23 +169,33 @@ function closeRegisterModal() {
 
 function submitRegistration(e) {
   e.preventDefault();
-  const name = document.getElementById('reg-name').value;
-  closeRegisterModal();
+  const name = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const dept = document.getElementById('reg-dept').value;
 
-  const toast = document.getElementById('register-toast');
-  toast.textContent = '✓ Thanks ' + name + '! You\'re registered for "' + currentEventName + '"';
-  toast.classList.add('show');
-  setTimeout(function () {
-    toast.classList.remove('show');
-  }, 4000);
+  const form = new FormData();
+  form.append('slug', currentEventSlug);
+  form.append('name', name);
+  form.append('email', email);
+  form.append('department', dept);
+
+  fetch('register.php', { method: 'POST', body: form })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data.ok) {
+        alert(data.errors.join('\n'));
+        return;
+      }
+      closeRegisterModal();
+      const toast = document.getElementById('register-toast');
+      toast.textContent = '✓ Thanks ' + name + '! You\'re registered.';
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 4000);
+    })
+    .catch(function () {
+      alert('Something went wrong. Please try again.');
+    });
 }
-
-document.addEventListener('click', function (e) {
-  const overlay = document.getElementById('register-modal');
-  if (overlay && e.target === overlay) {
-    closeRegisterModal();
-  }
-});
 
 // Events - Search Filter
 document.addEventListener('DOMContentLoaded', function () {
