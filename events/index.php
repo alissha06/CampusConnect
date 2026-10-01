@@ -55,69 +55,8 @@ include '../includes/navbar.php';
     </div>
   </div>
 <?php endforeach; ?>
+ <p class="no-results" id="no-results" style="display:none;">No events match your search.</p>
 </div>
-
-
-      <div class="event-card" data-title="guest lecture careers in cloud computing">
-        <div class="event-card-top">
-          <span class="event-tag">Industry Speaker</span>
-          <span class="seats-remaining">Seats available</span>
-        </div>
-        <h3>Guest Lecture: Careers in Cloud Computing</h3>
-        <p>An interactive session with industry professionals on cloud infrastructure, DevOps, and career pathways.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Afternoon session</div>
-          <div>📍 Seminar Hall, SICSR Campus</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=cloud-lecture" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Guest Lecture: Careers in Cloud Computing')">Register &rarr;</button>
-        </div>
-      </div>
-
-      <div class="event-card" data-title="inter college sports meet">
-        <div class="event-card-top">
-          <span class="event-tag">Athletics &amp; Sports</span>
-          <span class="seats-remaining">Team slots open</span>
-        </div>
-        <h3>Inter-College Sports Meet</h3>
-        <p>Annual collegiate athletic championship featuring track events, badminton, basketball, and table tennis.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Multi-day event</div>
-          <div>📍 University Sports Complex</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=sports-meet" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Inter-College Sports Meet')">Register &rarr;</button>
-        </div>
-      </div>
-
-      <div class="event-card" data-title="workshop intro to data science">
-        <div class="event-card-top">
-          <span class="event-tag">Hands-on Workshop</span>
-          <span class="seats-remaining">Seats available</span>
-        </div>
-        <h3>Workshop: Intro to Data Science</h3>
-        <p>A practical hands-on session covering foundational data science concepts and exploratory data analysis.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Morning session</div>
-          <div>📍 Computer Lab, Atur Centre</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=data-science-workshop" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Workshop: Intro to Data Science')">Register &rarr;</button>
-        </div>
-      </div>
-
-    </div>
-
-    <p class="no-results" id="no-results" style="display:none;">No events match your search.</p>
-  </div>
-</section>
-
 <!-- CLOSING NOTE -->
 <section class="about-block alt">
   <div class="container">
