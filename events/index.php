@@ -1,6 +1,11 @@
-<?php $root = '../'; ?>
-<?php include '../includes/header.php'; ?>
-<?php include '../includes/navbar.php'; ?>
+<?php
+$root = '../';
+require_once '../includes/db.php';
+$stmt = $pdo->query("SELECT slug, category, title, description, event_date, event_time, venue, seats_info FROM events ORDER BY posted_at DESC");
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+include '../includes/header.php';
+include '../includes/navbar.php';
+?>
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
@@ -26,88 +31,32 @@
         <input type="text" id="event-search" placeholder="Search events by name, venue, or topic...">
       </div>
     </div>
-    <p class="results-count"><span id="results-count">4</span> upcoming events</p>
-
-    <div class="event-grid" id="event-grid">
-
-      <div class="event-card" data-title="annual tech fest codesphere">
-        <div class="event-card-top">
-          <span class="event-tag">Technical / Hackathon</span>
-          <span class="seats-remaining">Seats available</span>
-        </div>
-        <h3>Annual Tech Fest "CodeSphere"</h3>
-        <p>A coding hackathon featuring UI/UX sprints, algorithmic challenges, and collegiate project exhibitions.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Full day event</div>
-          <div>📍 Atur Centre Auditorium &amp; Labs</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=codesphere" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Annual Tech Fest \'CodeSphere\'')">Register &rarr;</button>
-        </div>
-      </div>
-
-      <div class="event-card" data-title="guest lecture careers in cloud computing">
-        <div class="event-card-top">
-          <span class="event-tag">Industry Speaker</span>
-          <span class="seats-remaining">Seats available</span>
-        </div>
-        <h3>Guest Lecture: Careers in Cloud Computing</h3>
-        <p>An interactive session with industry professionals on cloud infrastructure, DevOps, and career pathways.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Afternoon session</div>
-          <div>📍 Seminar Hall, SICSR Campus</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=cloud-lecture" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Guest Lecture: Careers in Cloud Computing')">Register &rarr;</button>
-        </div>
-      </div>
-
-      <div class="event-card" data-title="inter college sports meet">
-        <div class="event-card-top">
-          <span class="event-tag">Athletics &amp; Sports</span>
-          <span class="seats-remaining">Team slots open</span>
-        </div>
-        <h3>Inter-College Sports Meet</h3>
-        <p>Annual collegiate athletic championship featuring track events, badminton, basketball, and table tennis.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Multi-day event</div>
-          <div>📍 University Sports Complex</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=sports-meet" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Inter-College Sports Meet')">Register &rarr;</button>
-        </div>
-      </div>
-
-      <div class="event-card" data-title="workshop intro to data science">
-        <div class="event-card-top">
-          <span class="event-tag">Hands-on Workshop</span>
-          <span class="seats-remaining">Seats available</span>
-        </div>
-        <h3>Workshop: Intro to Data Science</h3>
-        <p>A practical hands-on session covering foundational data science concepts and exploratory data analysis.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Morning session</div>
-          <div>📍 Computer Lab, Atur Centre</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=data-science-workshop" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Workshop: Intro to Data Science')">Register &rarr;</button>
-        </div>
-      </div>
-
+    <p class="results-count"><span id="results-count"><?= count($events) ?></span> upcoming events</p>
+    
+<div class="event-grid" id="event-grid">
+<?php foreach ($events as $e):
+    $dataTitle = trim(preg_replace('/[^a-z0-9]+/', ' ', strtolower($e['title'])));
+?>
+  <div class="event-card" data-title="<?= htmlspecialchars($dataTitle) ?>">
+    <div class="event-card-top">
+      <span class="event-tag"><?= htmlspecialchars($e['category']) ?></span>
+      <span class="seats-remaining"><?= htmlspecialchars($e['seats_info']) ?></span>
     </div>
-
-    <p class="no-results" id="no-results" style="display:none;">No events match your search.</p>
+    <h3><?= htmlspecialchars($e['title']) ?></h3>
+    <p><?= htmlspecialchars($e['description']) ?></p>
+    <div class="event-details">
+      <div>📅 <?= htmlspecialchars($e['event_date']) ?></div>
+      <div>🕒 <?= htmlspecialchars($e['event_time']) ?></div>
+      <div>📍 <?= htmlspecialchars($e['venue']) ?></div>
+    </div>
+    <div class="event-actions">
+      <a href="details.php?event=<?= urlencode($e['slug']) ?>" class="btn-outline-sm">View Details</a>
+      <button class="btn-mark-complete" onclick="openRegisterModal('<?= htmlspecialchars(addslashes($e['title'])) ?>', '<?= htmlspecialchars(addslashes($e['slug'])) ?>')">Register &rarr;</button>
+    </div>
   </div>
-</section>
-
+<?php endforeach; ?>
+ <p class="no-results" id="no-results" style="display:none;">No events match your search.</p>
+</div>
 <!-- CLOSING NOTE -->
 <section class="about-block alt">
   <div class="container">

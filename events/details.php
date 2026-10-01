@@ -1,50 +1,22 @@
 <?php
 $root = '../';
+require_once '../includes/db.php';
+
+$slug = $_GET['event'] ?? 'codesphere';
+$stmt = $pdo->prepare("SELECT * FROM events WHERE slug = :slug");
+$stmt->execute(['slug' => $slug]);
+$event = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$event) {
+    // fall back to the first event rather than showing a broken page
+    $event = $pdo->query("SELECT * FROM events ORDER BY posted_at DESC LIMIT 1")->fetch(PDO::FETCH_ASSOC);
+}
+
 include '../includes/header.php';
 include '../includes/navbar.php';
-
-$events = [
-  'codesphere' => [
-    'title' => 'Annual Tech Fest "CodeSphere"',
-    'category' => 'Technical / Hackathon',
-    'description' => 'CodeSphere is the flagship technical fest featuring a coding hackathon, UI/UX design sprint, algorithmic problem-solving challenges, and collegiate project exhibitions. Open to students across all years.',
-    'date' => 'To be announced',
-    'time' => 'Full day event',
-    'venue' => 'Atur Centre Auditorium &amp; Labs',
-    'seats' => 'Seats available',
-  ],
-  'cloud-lecture' => [
-    'title' => 'Guest Lecture: Careers in Cloud Computing',
-    'category' => 'Industry Speaker',
-    'description' => 'An interactive guest lecture with industry professionals discussing cloud infrastructure, DevOps pipelines, and career pathways into cloud computing roles.',
-    'date' => 'To be announced',
-    'time' => 'Afternoon session',
-    'venue' => 'Seminar Hall, SICSR Campus',
-    'seats' => 'Seats available',
-  ],
-  'sports-meet' => [
-    'title' => 'Inter-College Sports Meet',
-    'category' => 'Athletics &amp; Sports',
-    'description' => 'The annual collegiate athletic championship featuring track events, badminton, basketball, and table tennis tournaments. Students can register individually or as part of a team.',
-    'date' => 'To be announced',
-    'time' => 'Multi-day event',
-    'venue' => 'University Sports Complex',
-    'seats' => 'Team slots open',
-  ],
-  'data-science-workshop' => [
-    'title' => 'Workshop: Intro to Data Science',
-    'category' => 'Hands-on Workshop',
-    'description' => 'A practical, hands-on workshop covering foundational data science concepts, exploratory data analysis, and an introduction to basic modeling techniques.',
-    'date' => 'To be announced',
-    'time' => 'Morning session',
-    'venue' => 'Computer Lab, Atur Centre',
-    'seats' => 'Seats available',
-  ],
-];
-
-$eventKey = isset($_GET['event']) && isset($events[$_GET['event']]) ? $_GET['event'] : 'codesphere';
-$event = $events[$eventKey];
 ?>
+
+
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
@@ -70,11 +42,11 @@ $event = $events[$eventKey];
         <p><?php echo $event['description']; ?></p>
       </div>
       <div class="event-info-card">
-        <div class="event-info-row">📅 <span><?php echo $event['date']; ?></span></div>
-        <div class="event-info-row">🕒 <span><?php echo $event['time']; ?></span></div>
+        <div class="event-info-row">📅 <span><?php echo $event['event_date']; ?></span></div>
+        <div class="event-info-row">🕒 <span><?php echo $event['event_time']; ?></span></div>
         <div class="event-info-row">📍 <span><?php echo $event['venue']; ?></span></div>
-        <div class="event-info-row">🎟 <span><?php echo $event['seats']; ?></span></div>
-        <button class="btn btn-primary" style="width:100%; margin-top:16px;" onclick="openRegisterModal('<?php echo addslashes($event['title']); ?>')">Register Now</button>
+        <div class="event-info-row">🎟 <span><?php echo $event['seats_info']; ?></span></div>
+        <button class="btn btn-primary" style="width:100%; margin-top:16px;" onclick="openRegisterModal('<?= htmlspecialchars(addslashes($event['title'])) ?>', '<?= htmlspecialchars(addslashes($event['slug'])) ?>')">Register Now</button>
       </div>
     </div>
   </div>
