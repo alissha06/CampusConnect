@@ -566,3 +566,118 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 });
+
+// ===== Show/Hide password toggles (used on Login and Register) =====
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.show-toggle').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      const input = document.getElementById(btn.dataset.target);
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      btn.textContent = isHidden ? 'Hide' : 'Show';
+    });
+  });
+});
+
+// ===== Login form =====
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('login-form');
+  if (!form) return;
+
+  const successBox = document.getElementById('login-success');
+
+  function setError(id, text) {
+    document.getElementById(id).textContent = text;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    successBox.style.display = 'none';
+
+    const email = document.getElementById('login-email').value.trim();
+    const password = document.getElementById('login-password').value;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const emailError = emailPattern.test(email) ? '' : 'Please enter a valid email address.';
+    const passwordError = password ? '' : 'Please enter your password.';
+
+    setError('login-err-email', emailError);
+    setError('login-err-password', passwordError);
+
+    if (emailError || passwordError) return;
+
+    successBox.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
+
+// ===== Register form =====
+document.addEventListener('DOMContentLoaded', function () {
+  const form = document.getElementById('register-form');
+  if (!form) return;
+
+  const successBox = document.getElementById('register-success');
+  const passwordInput = document.getElementById('reg-password');
+  const strengthFill = document.getElementById('strength-fill');
+  const strengthLabel = document.getElementById('strength-label');
+
+  function setError(id, text) {
+    document.getElementById(id).textContent = text;
+  }
+
+  function scorePassword(value) {
+    let score = 0;
+    if (value.length >= 8) score++;
+    if (/[A-Z]/.test(value)) score++;
+    if (/[0-9]/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
+    return score; // 0 to 4
+  }
+
+  passwordInput.addEventListener('input', function () {
+    const score = scorePassword(passwordInput.value);
+    const levels = [
+      { width: '0%', label: 'Password strength', className: '' },
+      { width: '25%', label: 'Weak', className: 'weak' },
+      { width: '50%', label: 'Fair', className: 'fair' },
+      { width: '75%', label: 'Good', className: 'good' },
+      { width: '100%', label: 'Strong', className: 'strong' },
+    ];
+    const level = levels[score];
+    strengthFill.style.width = level.width;
+    strengthFill.className = 'strength-fill ' + level.className;
+    strengthLabel.textContent = passwordInput.value ? 'Password strength: ' + level.label : 'Password strength';
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    successBox.style.display = 'none';
+
+    const name = document.getElementById('reg-full-name').value.trim();
+    const email = document.getElementById('reg-full-email').value.trim();
+    const dept = document.getElementById('reg-dept').value;
+    const password = passwordInput.value;
+    const confirm = document.getElementById('reg-confirm').value;
+    const terms = document.getElementById('reg-terms').checked;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const nameError = name ? '' : 'Please enter your full name.';
+    const emailError = emailPattern.test(email) ? '' : 'Please enter a valid email address.';
+    const deptError = dept ? '' : 'Please select your department.';
+    const passwordError = password.length >= 8 ? '' : 'Password must be at least 8 characters.';
+    const confirmError = confirm === password && confirm ? '' : 'Passwords do not match.';
+    const termsError = terms ? '' : 'Please agree to the Terms of Use and Privacy Policy.';
+
+    setError('reg-err-name', nameError);
+    setError('reg-err-email', emailError);
+    setError('reg-err-dept', deptError);
+    setError('reg-err-password', passwordError);
+    setError('reg-err-confirm', confirmError);
+    setError('reg-err-terms', termsError);
+
+    if (nameError || emailError || deptError || passwordError || confirmError || termsError) return;
+
+    successBox.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
