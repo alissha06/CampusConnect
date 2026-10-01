@@ -1,6 +1,11 @@
-<?php $root = '../'; ?>
-<?php include '../includes/header.php'; ?>
-<?php include '../includes/navbar.php'; ?>
+<?php
+$root = '../';
+require_once '../includes/db.php';
+$stmt = $pdo->query("SELECT slug, category, title, description, event_date, event_time, venue, seats_info FROM events ORDER BY posted_at DESC");
+$events = $stmt->fetchAll(PDO::FETCH_ASSOC);
+include '../includes/header.php';
+include '../includes/navbar.php';
+?>
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
@@ -26,27 +31,32 @@
         <input type="text" id="event-search" placeholder="Search events by name, venue, or topic...">
       </div>
     </div>
-    <p class="results-count"><span id="results-count">4</span> upcoming events</p>
+    <p class="results-count"><span id="results-count"><?= count($events) ?></span> upcoming events</p>
+    
+<div class="event-grid" id="event-grid">
+<?php foreach ($events as $e):
+    $dataTitle = trim(preg_replace('/[^a-z0-9]+/', ' ', strtolower($e['title'])));
+?>
+  <div class="event-card" data-title="<?= htmlspecialchars($dataTitle) ?>">
+    <div class="event-card-top">
+      <span class="event-tag"><?= htmlspecialchars($e['category']) ?></span>
+      <span class="seats-remaining"><?= htmlspecialchars($e['seats_info']) ?></span>
+    </div>
+    <h3><?= htmlspecialchars($e['title']) ?></h3>
+    <p><?= htmlspecialchars($e['description']) ?></p>
+    <div class="event-details">
+      <div>📅 <?= htmlspecialchars($e['event_date']) ?></div>
+      <div>🕒 <?= htmlspecialchars($e['event_time']) ?></div>
+      <div>📍 <?= htmlspecialchars($e['venue']) ?></div>
+    </div>
+    <div class="event-actions">
+      <a href="details.php?event=<?= urlencode($e['slug']) ?>" class="btn-outline-sm">View Details</a>
+      <button class="btn-mark-complete" onclick="openRegisterModal('<?= addslashes($e['title']) ?>')">Register &rarr;</button>
+    </div>
+  </div>
+<?php endforeach; ?>
+</div>
 
-    <div class="event-grid" id="event-grid">
-
-      <div class="event-card" data-title="annual tech fest codesphere">
-        <div class="event-card-top">
-          <span class="event-tag">Technical / Hackathon</span>
-          <span class="seats-remaining">Seats available</span>
-        </div>
-        <h3>Annual Tech Fest "CodeSphere"</h3>
-        <p>A coding hackathon featuring UI/UX sprints, algorithmic challenges, and collegiate project exhibitions.</p>
-        <div class="event-details">
-          <div>📅 To be announced</div>
-          <div>🕒 Full day event</div>
-          <div>📍 Atur Centre Auditorium &amp; Labs</div>
-        </div>
-        <div class="event-actions">
-          <a href="details.php?event=codesphere" class="btn-outline-sm">View Details</a>
-          <button class="btn-mark-complete" onclick="openRegisterModal('Annual Tech Fest \'CodeSphere\'')">Register &rarr;</button>
-        </div>
-      </div>
 
       <div class="event-card" data-title="guest lecture careers in cloud computing">
         <div class="event-card-top">
