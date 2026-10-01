@@ -50,46 +50,76 @@ function updateProgress() {
   document.getElementById('progress-caption').textContent = completedItems + ' of ' + totalItems + ' requirements completed';
 }
 
-// Notices - Search & Filter
+
+// Notices - Search & Filter (AJAX: fetches results from fetch_notices.php)
 document.addEventListener('DOMContentLoaded', function () {
   const searchInput = document.getElementById('notice-search');
-  const filterPills = document.querySelectorAll('.filter-pill');
-  const noticeCards = document.querySelectorAll('.notice-card');
-  const resultsCount = document.getElementById('results-count');
-  const noResults = document.getElementById('no-results');
-
   if (!searchInput) return; // only run this on the Notices page
 
+  const filterPills = document.querySelectorAll('.filter-pill');
+  const list = document.getElementById('notice-list');
+  const resultsCount = document.getElementById('results-count');
+  const noResults = document.getElementById('no-results');
+  const noResultsText = noResults.textContent;
+
   let activeFilter = 'all';
+  let debounceTimer = null;
+  let latestRequest = 0;
 
-  function applyFilters() {
-    const query = searchInput.value.toLowerCase().trim();
-    let visibleCount = 0;
-
-    noticeCards.forEach(function (card) {
-      const matchesCategory = activeFilter === 'all' || card.dataset.category === activeFilter;
-      const matchesSearch = card.dataset.title.includes(query);
-
-      if (matchesCategory && matchesSearch) {
-        card.style.display = '';
-        visibleCount++;
-      } else {
-        card.style.display = 'none';
-      }
-    });
-
-    resultsCount.textContent = visibleCount;
-    noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
-  searchInput.addEventListener('input', applyFilters);
+  function render(rows) {
+    list.innerHTML = rows.map(function (n) {
+      const label = n.category.charAt(0).toUpperCase() + n.category.slice(1);
+      return '<div class="notice-card">' +
+        '<span class="notice-tag ' + escapeHtml(n.category) + '">' + escapeHtml(label) + '</span>' +
+        '<h3>' + escapeHtml(n.title) + '</h3>' +
+        '<p>' + escapeHtml(n.description) + '</p>' +
+        '<div class="notice-meta">' +
+          '<span>📅 ' + escapeHtml(n.date) + '</span>' +
+          '<a href="details.php?id=' + encodeURIComponent(n.id) + '" class="notice-link">Read More &rarr;</a>' +
+        '</div></div>';
+    }).join('');
+
+    resultsCount.textContent = rows.length;
+    noResults.textContent = noResultsText;
+    noResults.style.display = rows.length === 0 ? 'block' : 'none';
+  }
+
+  function loadNotices() {
+    const thisRequest = ++latestRequest;
+    const url = 'fetch_notices.php?q=' + encodeURIComponent(searchInput.value.trim()) +
+                '&category=' + encodeURIComponent(activeFilter);
+
+    fetch(url)
+      .then(function (res) {
+        if (!res.ok) throw new Error('Request failed');
+        return res.json();
+      })
+      .then(function (rows) {
+        if (thisRequest === latestRequest) render(rows); // ignore out-of-date responses
+      })
+      .catch(function () {
+        noResults.textContent = 'Could not load notices. Please try again.';
+        noResults.style.display = 'block';
+      });
+  }
+
+  searchInput.addEventListener('input', function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(loadNotices, 250); // wait until typing pauses
+  });
 
   filterPills.forEach(function (pill) {
     pill.addEventListener('click', function () {
       filterPills.forEach(function (p) { p.classList.remove('active'); });
       pill.classList.add('active');
       activeFilter = pill.dataset.filter;
-      applyFilters();
+      loadNotices();
     });
   });
 });
@@ -367,23 +397,43 @@ document.addEventListener('DOMContentLoaded', function () {
     return ok;
   }
 
-  // Submit (frontend only for now)
+
+   // Submit: send the form to submit.php with fetch, using FormData for the photo
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     successBox.style.display = 'none';
     if (!validate()) return;
 
-    form.reset();
-    clearPhoto();
-    charCount.textContent = '0';
-    typeButtons.forEach(function (b) { b.classList.remove('active'); });
-    typeButtons[0].classList.add('active');
-    typeInput.value = 'lost';
-    locationLabel.textContent = 'Location lost';
-    dateLabel.textContent = 'Date lost';
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
 
-    successBox.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    fetch('submit.php', {
+      method: 'POST',
+      body: new FormData(form)   // reads every named field, including the file, automatically
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        submitBtn.disabled = false;
+        if (!data.ok) {
+          alert(data.errors.join('\n'));   // simple for now; can be styled later
+          return;
+        }
+        form.reset();
+        clearPhoto();
+        charCount.textContent = '0';
+        typeButtons.forEach(function (b) { b.classList.remove('active'); });
+        typeButtons[0].classList.add('active');
+        typeInput.value = 'lost';
+        locationLabel.textContent = 'Location lost';
+        dateLabel.textContent = 'Date lost';
+
+        successBox.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        alert('Something went wrong. Please try again.');
+      });
   });
 
   // Clear form button
@@ -466,17 +516,36 @@ document.addEventListener('DOMContentLoaded', function () {
     return !(nameError || emailError || categoryError || ratingError || messageError);
   }
 
-  // Submit (frontend only for now)
+    // Submit: send the form to submit.php
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     successBox.style.display = 'none';
     if (!validate()) return;
 
-    form.reset();
-    successBox.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
 
+    fetch('submit.php', {
+      method: 'POST',
+      body: new FormData(form)
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        submitBtn.disabled = false;
+        if (!data.ok) {
+          alert(data.errors.join('\n'));
+          return;
+        }
+        form.reset();
+        successBox.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      })
+      .catch(function () {
+        submitBtn.disabled = false;
+        alert('Something went wrong. Please try again.');
+      });
+  });
+  
   // Clear form (also runs after a successful submit)
   form.addEventListener('reset', function () {
     setRating(0);
