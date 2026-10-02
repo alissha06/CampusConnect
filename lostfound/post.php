@@ -1,3 +1,13 @@
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+?>
+
+
+
 <?php $root = '../'; ?>
 <?php include '../includes/header.php'; ?>
 <?php include '../includes/navbar.php'; ?>

@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once '../includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -6,10 +7,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!isset($_SESSION['user_id'])) {
+    http_response_code(401);
+    header('Content-Type: application/json');
+    echo json_encode(['ok' => false, 'errors' => ['Please log in to register for events.']]);
+    exit;
+}
+
 $slug = trim($_POST['slug'] ?? '');
-$name = trim($_POST['name'] ?? '');
-$email = trim($_POST['email'] ?? '');
 $dept = trim($_POST['department'] ?? '');
+$name  = $_SESSION['name'];
+$email = $_SESSION['email'];
 
 header('Content-Type: application/json');
 
@@ -18,10 +26,8 @@ $stmt->execute(['slug' => $slug]);
 $event = $stmt->fetch(PDO::FETCH_ASSOC);
 
 $errors = [];
-if (!$event)                                     $errors[] = 'Event not found.';
-if ($name === '')                                 $errors[] = 'Name is required.';
-if (!filter_var($email, FILTER_VALIDATE_EMAIL))  $errors[] = 'A valid email is required.';
-if ($dept === '')                                 $errors[] = 'Please select your department.';
+if (!$event)        $errors[] = 'Event not found.';
+if ($dept === '')    $errors[] = 'Please select your department.';
 
 if ($errors) {
     http_response_code(422);

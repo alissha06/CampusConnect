@@ -1,4 +1,12 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+?>
+
+<?php
 $root = '../';
 require_once '../includes/db.php';
 $stmt = $pdo->query("SELECT slug, category, title, description, event_date, event_time, venue, seats_info FROM events ORDER BY posted_at DESC");
