@@ -21,7 +21,7 @@
         ✓ Login successful. (Demo only: no real account exists yet.)
       </div>
 
-      <form id="login-form" method="post" novalidate>
+      <form id="login-form" method="post" action="login_process.php" novalidate>
 
         <div class="form-group">
           <label for="login-email">College email <span class="req">*</span></label>

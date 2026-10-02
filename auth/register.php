@@ -18,10 +18,10 @@
       <p class="tagline">Register to track your admission progress and sign up for events.</p>
 
       <div class="form-success" id="register-success" style="display:none;">
-        ✓ Account created. (Demo only: no account is actually saved yet.)
+         Account created. 
       </div>
 
-      <form id="register-form" method="post" novalidate>
+      <form id="register-form" method="post" action="register_process.php" novalidate>
 
         <div class="form-group">
           <label for="reg-full-name">Full name <span class="req">*</span></label>

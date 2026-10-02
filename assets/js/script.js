@@ -604,10 +604,9 @@ document.addEventListener('DOMContentLoaded', function () {
     setError('login-err-email', emailError);
     setError('login-err-password', passwordError);
 
-    if (emailError || passwordError) return;
+        if (emailError || passwordError) return;
 
-    successBox.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    HTMLFormElement.prototype.submit.call(form);
   });
 });
 
@@ -676,8 +675,6 @@ document.addEventListener('DOMContentLoaded', function () {
     setError('reg-err-terms', termsError);
 
     if (nameError || emailError || deptError || passwordError || confirmError || termsError) return;
-
-    successBox.style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    HTMLFormElement.prototype.submit.call(form);
   });
 });
