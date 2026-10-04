@@ -1,4 +1,7 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 // Detect the current page so we can highlight the matching nav link
 $current = basename($_SERVER['PHP_SELF']);
 $currentDir = basename(dirname($_SERVER['PHP_SELF']));
@@ -31,7 +34,19 @@ function navActive($dir, $file, $currentDir, $current) {
         </ul>
       </li>
 
-      <li><a href="<?php echo $root; ?>auth/login.php" class="nav-login <?php echo ($currentDir === 'auth') ? 'active' : ''; ?>">Login</a></li>
+      <?php if (isset($_SESSION['user_id'])): ?>
+  <li class="dropdown">
+    <button class="dropdown-toggle <?php echo ($currentDir === 'dashboard') ? 'active' : ''; ?>">
+      <?php echo htmlspecialchars($_SESSION['name']); ?> <span class="arrow">▾</span>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a href="<?php echo $root; ?>dashboard/<?php echo $_SESSION['role']; ?>.php">Dashboard</a></li>
+      <li><a href="<?php echo $root; ?>auth/logout.php">Logout</a></li>
+    </ul>
+  </li>
+<?php else: ?>
+  <li><a href="<?php echo $root; ?>auth/login.php" class="nav-login <?php echo ($currentDir === 'auth') ? 'active' : ''; ?>">Login</a></li>
+<?php endif; ?>
     </ul>
   </div>
 </nav>
