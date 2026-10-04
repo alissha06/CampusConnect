@@ -3,19 +3,23 @@ console.log("CampusConnect script loaded");
 
 // Dropdown menu toggle
 document.addEventListener('DOMContentLoaded', function () {
-  const dropdown = document.querySelector('.dropdown');
-  const toggle = document.querySelector('.dropdown-toggle');
+  const dropdowns = document.querySelectorAll('.dropdown');
 
-  if (toggle) {
+  dropdowns.forEach(function (dropdown) {
+    const toggle = dropdown.querySelector('.dropdown-toggle');
+    if (!toggle) return;
+
     toggle.addEventListener('click', function (e) {
       e.stopPropagation();
+      // close any other open dropdown first, so only one is open at a time
+      dropdowns.forEach(function (d) { if (d !== dropdown) d.classList.remove('open'); });
       dropdown.classList.toggle('open');
     });
+  });
 
-    document.addEventListener('click', function () {
-      dropdown.classList.remove('open');
-    });
-  }
+  document.addEventListener('click', function () {
+    dropdowns.forEach(function (d) { d.classList.remove('open'); });
+  });
 });
 
 // Admission Checklist - Mark as Completed
