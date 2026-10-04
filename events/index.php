@@ -78,7 +78,7 @@ include '../includes/navbar.php';
     <button class="modal-close" onclick="closeRegisterModal()">&times;</button>
     <h3>Register for <span id="modal-event-name"></span></h3>
     <p class="modal-subtext">Fill in your details to reserve your spot.</p>
-    <form id="register-form" onsubmit="submitRegistration(event)">
+    <form id="event-register-form" onsubmit="submitRegistration(event)">
       <div class="form-group">
         <label for="reg-name">Full Name</label>
         <input type="text" id="reg-name" required placeholder="Your full name">
