@@ -160,7 +160,7 @@ function openRegisterModal(eventName, eventSlug) {
   currentEventSlug = eventSlug;
   document.getElementById('modal-event-name').textContent = eventName;
   document.getElementById('register-modal').classList.add('show');
-  document.getElementById('register-form').reset();
+  document.getElementById('event-register-form').reset();
 }
 
 function closeRegisterModal() {
