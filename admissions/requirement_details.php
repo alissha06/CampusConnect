@@ -70,6 +70,10 @@ $documents = [
 // Get the requested document, default to anti-ragging if none/invalid specified
 $docKey = isset($_GET['doc']) && isset($documents[$_GET['doc']]) ? $_GET['doc'] : 'anti-ragging';
 $doc = $documents[$docKey];
+require_once '../includes/db.php';
+$stmt = $pdo->prepare("SELECT resource_type, title, file_path FROM admission_resources WHERE doc_key = :key");
+$stmt->execute(['key' => $docKey]);
+$resources = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!-- BREADCRUMB -->
@@ -131,15 +135,18 @@ $doc = $documents[$docKey];
   <div class="container">
     <h2>Document Downloads &amp; Guidance</h2>
     <div class="resource-links">
-  <?php if (in_array('pdf', $doc['resources'])): ?>
-    <a href="#" class="resource-btn">📄 View PDF Instructions</a>
-  <?php endif; ?>
-  <?php if (in_array('guide', $doc['resources'])): ?>
-    <a href="#" class="resource-btn">⬇ Download Guide</a>
-  <?php endif; ?>
-  <?php if (in_array('tutorial', $doc['resources'])): ?>
-    <a href="#" class="resource-btn">▶ Watch Tutorial</a>
-  <?php endif; ?>
+<?php foreach ($resources as $r):
+    $isExternal = str_starts_with($r['file_path'], 'http');
+    $href = $isExternal ? $r['file_path'] : '../' . $r['file_path'];
+    $icon = $r['resource_type'] === 'tutorial' ? '▶' : ($r['resource_type'] === 'guide' ? '⬇' : '📄');
+?>
+      <a href="<?= htmlspecialchars($href) ?>" class="resource-btn" <?= $isExternal ? 'target="_blank" rel="noopener"' : 'download' ?>>
+        <?= $icon ?> <?= htmlspecialchars($r['title']) ?>
+      </a>
+<?php endforeach; ?>
+<?php if (empty($resources)): ?>
+      <p>No downloadable resources available yet for this document.</p>
+<?php endif; ?>
     </div>
   </div>
 </section>
