@@ -10,6 +10,9 @@ require_once '../includes/db.php';
 
 $notices = $pdo->query("SELECT title, posted_at FROM notices ORDER BY posted_at DESC LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
 $events  = $pdo->query("SELECT title, slug, event_date FROM events ORDER BY posted_at DESC LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
+$myTickets = $pdo->prepare("SELECT ticket_number, category, status, submitted_at FROM feedback WHERE user_id = :uid ORDER BY submitted_at DESC");
+$myTickets->execute(['uid' => $_SESSION['user_id']]);
+$myTickets = $myTickets->fetchAll(PDO::FETCH_ASSOC);
 
 include '../includes/header.php';
 include '../includes/navbar.php';
@@ -19,6 +22,25 @@ include '../includes/navbar.php';
   <div class="container">
     <p class="hero-eyebrow">Student Dashboard</p>
     <h1>Welcome, <?= htmlspecialchars($_SESSION['name']) ?></h1>
+  </div>
+</section>
+
+<section class="about-block">
+  <div class="container">
+    <h2>My Feedback Tickets</h2>
+    <div class="dashboard-list">
+    <?php if (empty($myTickets)): ?>
+      <p>You haven't submitted any feedback yet.</p>
+    <?php endif; ?>
+    <?php foreach ($myTickets as $t):
+        $statusLabel = ['open' => 'Open', 'in_progress' => 'In Progress', 'resolved' => 'Resolved'][$t['status']];
+    ?>
+      <div class="dashboard-item">
+        <span class="dashboard-item-title"><?= htmlspecialchars($t['ticket_number']) ?> — <?= htmlspecialchars($t['category']) ?></span>
+        <span class="dashboard-item-date"><?= htmlspecialchars($statusLabel) ?></span>
+      </div>
+    <?php endforeach; ?>
+    </div>
   </div>
 </section>
 

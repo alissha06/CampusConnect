@@ -682,3 +682,23 @@ document.addEventListener('DOMContentLoaded', function () {
     HTMLFormElement.prototype.submit.call(form);
   });
 });
+
+//when the admin changes the states for feedback tickets
+document.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('.status-select').forEach(function (select) {
+    select.addEventListener('change', function () {
+      const id = select.dataset.id;
+      const status = select.value;
+      fetch('update_status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'id=' + encodeURIComponent(id) + '&status=' + encodeURIComponent(status)
+      })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.ok) alert('Could not update status.');
+        })
+        .catch(function () { alert('Something went wrong updating the status.'); });
+    });
+  });
+});
