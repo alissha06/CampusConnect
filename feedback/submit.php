@@ -34,10 +34,10 @@ if ($errors) {
 }
 
 $stmt = $pdo->prepare(
-    "INSERT INTO feedback (ticket_number,user_id, name, email, category, rating, message) VALUES (:user_id, :name, :email, :category, :rating, :message)"
+    "INSERT INTO feedback (ticket_number, user_id, name, email, category, rating, message) VALUES (:ticket, :user_id, :name, :email, :category, :rating, :message)"
 );
 $stmt->execute([
-    'ticket'   =>$ticketNumber,
+    'ticket'   => $ticketNumber,
     'user_id'  => $_SESSION['user_id'],
     'name'     => $name,
     'email'    => $email,
