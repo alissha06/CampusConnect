@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
     echo json_encode(['ok' => false, 'errors' => ['Please log in to submit feedback.']]);
     exit;
 }
-
+$ticketNumber = 'FB-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2)));
 $name     = $_SESSION['name'];
 $email    = $_SESSION['email'];
 $category = trim($_POST['category'] ?? '');
@@ -32,7 +32,7 @@ if ($errors) {
     echo json_encode(['ok' => false, 'errors' => $errors]);
     exit;
 }
-$ticketNumber = 'FB-' . date('Ymd') . '-' . strtoupper(bin2hex(random_bytes(2)));
+
 $stmt = $pdo->prepare(
     "INSERT INTO feedback (ticket_number,user_id, name, email, category, rating, message) VALUES (:user_id, :name, :email, :category, :rating, :message)"
 );
