@@ -683,22 +683,34 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-//when the admin changes the states for feedback tickets
+// ===== Admin: feedback ticket status + replies =====
 document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('.status-select').forEach(function (select) {
     select.addEventListener('change', function () {
-      const id = select.dataset.id;
-      const status = select.value;
       fetch('update_status.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: 'id=' + encodeURIComponent(id) + '&status=' + encodeURIComponent(status)
+        body: 'id=' + encodeURIComponent(select.dataset.id) + '&status=' + encodeURIComponent(select.value)
       })
         .then(function (res) { return res.json(); })
         .then(function (data) {
-          if (!data.ok) alert('Could not update status.');
+          if (!data.ok) { alert(data.errors.join('\n')); return; }
+          location.reload();
         })
         .catch(function () { alert('Something went wrong updating the status.'); });
+    });
+  });
+
+  document.querySelectorAll('.reply-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      fetch('reply.php', { method: 'POST', body: new FormData(form) })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (!data.ok) { alert(data.errors.join('\n')); return; }
+          location.reload();
+        })
+        .catch(function () { alert('Something went wrong sending the reply.'); });
     });
   });
 });

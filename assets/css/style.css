@@ -2014,3 +2014,24 @@ a.dashboard-item-title:hover {
   background: #d9534f;
   color: #fff;
 }
+
+/* ===== Feedback tickets ===== */
+.ticket-details { background:#fff; border:1px solid #e4e4e4; border-radius:10px; padding:14px 18px; margin-bottom:12px; }
+.ticket-details summary { display:flex; justify-content:space-between; align-items:center; gap:12px; cursor:pointer; list-style:none; }
+.ticket-details summary::-webkit-details-marker { display:none; }
+.ticket-message { margin:12px 0 4px; color:#555; }
+
+.status-pill { font-size:.8rem; font-weight:600; padding:4px 10px; border-radius:999px; white-space:nowrap; }
+.status-open { background:#fdecea; color:#b3261e; }
+.status-in_progress { background:#fff4e0; color:#a15c00; }
+.status-resolved { background:#e6f4ea; color:#1e7a34; }
+
+.ticket-timeline { list-style:none; margin:14px 0 0; padding:0 0 0 14px; border-left:2px solid #e4e4e4; }
+.ticket-timeline li { position:relative; padding:0 0 14px 16px; }
+.tl-dot { position:absolute; left:-20px; top:5px; width:10px; height:10px; border-radius:50%; background:#999; }
+.tl-reply .tl-dot { background:#1a73e8; }
+.tl-date { display:block; font-size:.8rem; color:#777; margin-top:2px; }
+.tl-reply p { margin:4px 0 0; background:#f4f8ff; padding:8px 12px; border-radius:8px; }
+
+.reply-form { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+.reply-form textarea { width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; font:inherit; }

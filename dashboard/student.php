@@ -7,12 +7,27 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
 
 $root = '../';
 require_once '../includes/db.php';
+require_once '../includes/ticket_timeline.php';
 
 $notices = $pdo->query("SELECT title, posted_at FROM notices ORDER BY posted_at DESC LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
 $events  = $pdo->query("SELECT title, slug, event_date FROM events ORDER BY posted_at DESC LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
-$myTickets = $pdo->prepare("SELECT ticket_number, category, status, submitted_at FROM feedback WHERE user_id = :uid ORDER BY submitted_at DESC");
+
+// ticket diplay on the student dashboard with filter
+$myTickets = $pdo->prepare("SELECT id, ticket_number, category, message, status, submitted_at FROM feedback WHERE user_id = :uid ORDER BY submitted_at DESC");
 $myTickets->execute(['uid' => $_SESSION['user_id']]);
 $myTickets = $myTickets->fetchAll(PDO::FETCH_ASSOC);
+
+$myUpdates = [];
+$u = $pdo->prepare("SELECT fu.feedback_id, fu.status, fu.message, fu.created_at
+                    FROM feedback_updates fu
+                    JOIN feedback f ON f.id = fu.feedback_id
+                    WHERE f.user_id = :uid
+                    ORDER BY fu.created_at ASC, fu.id ASC");
+$u->execute(['uid' => $_SESSION['user_id']]);
+foreach ($u->fetchAll(PDO::FETCH_ASSOC) as $row) {
+    $myUpdates[$row['feedback_id']][] = $row;
+}
+
 
 include '../includes/header.php';
 include '../includes/navbar.php';
@@ -28,19 +43,19 @@ include '../includes/navbar.php';
 <section class="about-block">
   <div class="container">
     <h2>My Feedback Tickets</h2>
-    <div class="dashboard-list">
     <?php if (empty($myTickets)): ?>
       <p>You haven't submitted any feedback yet.</p>
     <?php endif; ?>
-    <?php foreach ($myTickets as $t):
-        $statusLabel = ['open' => 'Open', 'in_progress' => 'In Progress', 'resolved' => 'Resolved'][$t['status']];
-    ?>
-      <div class="dashboard-item">
-        <span class="dashboard-item-title"><?= htmlspecialchars($t['ticket_number']) ?> — <?= htmlspecialchars($t['category']) ?></span>
-        <span class="dashboard-item-date"><?= htmlspecialchars($statusLabel) ?></span>
-      </div>
+    <?php foreach ($myTickets as $t): ?>
+      <details class="ticket-details">
+        <summary>
+          <span class="dashboard-item-title"><?= htmlspecialchars($t['ticket_number']) ?> — <?= htmlspecialchars($t['category']) ?></span>
+          <span class="status-pill status-<?= htmlspecialchars($t['status']) ?>"><?= htmlspecialchars(ticket_status_label($t['status'])) ?></span>
+        </summary>
+        <p class="ticket-message"><?= nl2br(htmlspecialchars($t['message'])) ?></p>
+        <?php render_ticket_timeline($t, $myUpdates[$t['id']] ?? []); ?>
+      </details>
     <?php endforeach; ?>
-    </div>
   </div>
 </section>
 
