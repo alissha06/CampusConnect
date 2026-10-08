@@ -22,36 +22,29 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Admission Checklist - Mark as Completed
-function markCompleted(button) {
+// ===== Admission Checklist (saved per student) =====
+function toggleChecklist(button, action) {
   const item = button.closest('.checklist-item');
-  item.classList.remove('pending');
-  item.classList.add('completed');
+  button.disabled = true;
 
-  // Update icon
-  item.querySelector('.checklist-icon').textContent = '✓';
-
-  // Update status tag
-  const statusTag = item.querySelector('.status-tag');
-  statusTag.textContent = 'Completed';
-  statusTag.classList.remove('pending-tag');
-  statusTag.classList.add('done');
-
-  // Remove the action buttons
-  item.querySelector('.checklist-actions').remove();
-
-  // Update the progress bar
-  updateProgress();
-}
-
-function updateProgress() {
-  const totalItems = document.querySelectorAll('.checklist-item').length;
-  const completedItems = document.querySelectorAll('.checklist-item.completed').length;
-  const percent = Math.round((completedItems / totalItems) * 100);
-
-  document.getElementById('progress-bar-fill').style.width = percent + '%';
-  document.getElementById('progress-number').textContent = percent;
-  document.getElementById('progress-caption').textContent = completedItems + ' of ' + totalItems + ' requirements completed';
+  fetch('checklist_toggle.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: 'item=' + encodeURIComponent(item.dataset.item) + '&action=' + encodeURIComponent(action)
+  })
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      if (!data.ok) {
+        button.disabled = false;
+        alert(data.errors.join('\n'));
+        return;
+      }
+      location.reload();   // page re-renders from the saved data, so the bar and tags are always correct
+    })
+    .catch(function () {
+      button.disabled = false;
+      alert('Something went wrong. Please try again.');
+    });
 }
 
 

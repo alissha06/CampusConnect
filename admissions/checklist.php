@@ -1,6 +1,25 @@
-<?php $root = '../'; ?>
-<?php include '../includes/header.php'; ?>
-<?php include '../includes/navbar.php'; ?>
+<?php
+session_start();
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
+
+$root = '../';
+require_once '../includes/db.php';
+$items = require '../includes/checklist_items.php';
+
+$stmt = $pdo->prepare("SELECT item_key FROM checklist_progress WHERE user_id = :uid");
+$stmt->execute(['uid' => $_SESSION['user_id']]);
+$done = array_flip($stmt->fetchAll(PDO::FETCH_COLUMN));   // ['academic' => 0, ...]
+
+$total     = count($items);
+$completed = count(array_intersect_key($items, $done));
+$percent   = $total ? (int)round($completed / $total * 100) : 0;
+
+include '../includes/header.php';
+include '../includes/navbar.php';
+?>
 
 <!-- BREADCRUMB -->
 <div class="breadcrumb">
@@ -15,7 +34,7 @@
     <p class="hero-eyebrow">Admissions • Student Tracker</p>
     <h1>My Admission Checklist</h1>
     <p class="tagline">Track your required documents and compliance undertakings for admission completion.</p>
-    <div class="student-tag">👤 Student: Demo Student</div>
+    <div class="student-tag">👤 Student: <?= htmlspecialchars($_SESSION['name']) ?></div>
   </div>
 </section>
 
@@ -26,12 +45,12 @@
       <div class="progress-card-header">
         <div>
           <h3>Admission Progress</h3>
-          <p id="progress-caption">2 of 4 requirements completed</p>
+          <p id="progress-caption"><?= $completed ?> of <?= $total ?> requirements completed</p>
         </div>
-        <div class="progress-percent"><span id="progress-number">50</span>%<span class="progress-label">Complete</span></div>
+        <div class="progress-percent"><span id="progress-number"><?= $percent ?></span>%<span class="progress-label">Complete</span></div>
       </div>
       <div class="progress-bar-track">
-        <div class="progress-bar-fill" id="progress-bar-fill" style="width: 50%;"></div>
+        <div class="progress-bar-fill" id="progress-bar-fill" style="width: <?= $percent ?>%;"></div>
       </div>
     </div>
   </div>
@@ -43,63 +62,32 @@
     <h2>Verification Tasks</h2>
 
     <div class="checklist">
-
-      <!-- Completed item -->
-      <div class="checklist-item completed">
-        <span class="checklist-icon">✓</span>
+    <?php foreach ($items as $key => $item):
+        $isDone = isset($done[$key]);
+    ?>
+      <div class="checklist-item <?= $isDone ? 'completed' : 'pending' ?>" data-item="<?= htmlspecialchars($key) ?>">
+        <span class="checklist-icon"><?= $isDone ? '✓' : '○' ?></span>
         <div class="checklist-body">
           <div class="checklist-title-row">
-            <h3>Academic Marksheet</h3>
-            <span class="status-tag done">Completed</span>
+            <h3><?= htmlspecialchars($item['title']) ?></h3>
+            <?php if ($isDone): ?>
+              <span class="status-tag done">Completed</span>
+            <?php else: ?>
+              <span class="status-tag pending-tag">Pending</span>
+            <?php endif; ?>
           </div>
-          <p>Class 10th and 12th official mark statements and passing certificates uploaded and verified.</p>
-        </div>
-      </div>
-
-      <!-- Completed item -->
-      <div class="checklist-item completed">
-        <span class="checklist-icon">✓</span>
-        <div class="checklist-body">
-          <div class="checklist-title-row">
-            <h3>Identity Document</h3>
-            <span class="status-tag done">Completed</span>
-          </div>
-          <p>Government-authorized photo identification verified against registered student profile.</p>
-        </div>
-      </div>
-
-      <!-- Pending item -->
-      <div class="checklist-item pending" data-item="anti-ragging">
-        <span class="checklist-icon">○</span>
-        <div class="checklist-body">
-          <div class="checklist-title-row">
-            <h3>Anti-Ragging Undertaking</h3>
-            <span class="status-tag pending-tag">Pending</span>
-          </div>
-          <p>Mandatory statutory compliance declaration. Reference ID and signed parent acknowledgement required.</p>
+          <p><?= htmlspecialchars($item['desc']) ?></p>
           <div class="checklist-actions">
-            <a href="requirement_details.php?doc=anti-ragging" class="btn-outline-sm">View Guide</a>
-            <button class="btn-mark-complete" onclick="markCompleted(this)">✓ Mark as Completed</button>
+            <a href="requirement_details.php?doc=<?= urlencode($key) ?>" class="btn-outline-sm">View Guide</a>
+            <?php if ($isDone): ?>
+              <button class="link-btn" onclick="toggleChecklist(this, 'undo')">Undo</button>
+            <?php else: ?>
+              <button class="btn-mark-complete" onclick="toggleChecklist(this, 'complete')">✓ Mark as Completed</button>
+            <?php endif; ?>
           </div>
         </div>
       </div>
-
-      <!-- Pending item -->
-      <div class="checklist-item pending" data-item="affidavit">
-        <span class="checklist-icon">○</span>
-        <div class="checklist-body">
-          <div class="checklist-title-row">
-            <h3>Affidavit</h3>
-            <span class="status-tag pending-tag">Pending</span>
-          </div>
-          <p>Notarized legal declaration verifying educational continuity and student code of conduct.</p>
-          <div class="checklist-actions">
-            <a href="requirement_details.php?doc=affidavit" class="btn-outline-sm">View Guide</a>
-            <button class="btn-mark-complete" onclick="markCompleted(this)">✓ Mark as Completed</button>
-          </div>
-        </div>
-      </div>
-
+    <?php endforeach; ?>
     </div>
   </div>
 </section>

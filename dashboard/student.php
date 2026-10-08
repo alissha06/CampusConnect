@@ -7,6 +7,14 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
 
 $root = '../';
 require_once '../includes/db.php';
+// the admission doc checklist
+$checkItems = require '../includes/checklist_items.php';
+$c = $pdo->prepare("SELECT item_key FROM checklist_progress WHERE user_id = :uid");
+$c->execute(['uid' => $_SESSION['user_id']]);
+$checkDone = count(array_intersect_key($checkItems, array_flip($c->fetchAll(PDO::FETCH_COLUMN))));
+$checkTotal = count($checkItems);
+$checkPercent = (int)round($checkDone / $checkTotal * 100);
+
 require_once '../includes/ticket_timeline.php';
 
 $notices = $pdo->query("SELECT title, posted_at FROM notices ORDER BY posted_at DESC LIMIT 3")->fetchAll(PDO::FETCH_ASSOC);
@@ -58,6 +66,19 @@ include '../includes/navbar.php';
     <?php endforeach; ?>
   </div>
 </section>
+
+
+<section class="about-block">
+  <div class="container">
+    <h2>Admission Progress</h2>
+    <p><?= $checkDone ?> of <?= $checkTotal ?> requirements completed</p>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" style="width: <?= $checkPercent ?>%;"></div>
+    </div>
+    <p style="margin-top:10px;"><a href="../admissions/checklist.php" class="dashboard-link">Open my checklist &rarr;</a></p>
+  </div>
+</section> 
+
 
 <section class="about-block">
   <div class="container">
