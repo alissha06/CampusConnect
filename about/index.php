@@ -34,11 +34,21 @@
   <div class="container two-col">
     <div>
       <h2>Our Vision</h2>
-      <p><em>[Placeholder — please confirm the exact wording from SICSR's official About/Vision page before publishing, to make sure it's quoted accurately.]</em></p>
+      <p><em>Promoting international understanding through quality education.</em></p>
     </div>
     <div>
       <h2>Our Mission</h2>
-      <p><em>[Placeholder — please confirm the exact wording from SICSR's official About/Mission page before publishing.]</em></p>
+      <p><em><ul><li>To inculcate the spirit of 'Vasudhaiva Kutumbakam' (the world is one family) </li>
+        <li>To contribute towards knowledge generation and dissemination</li>
+        <li>To promote ethical and value-based learning</li>
+        <li>To foster the spirit of national development</li>
+        <li>To inculcate cross-cultural sensitisation</li>
+        <li>To develop global competencies amongst students</li>
+        <li>To nurture creativity and encourage entrepreneurship</li>
+        <li>To enhance employability and contribute to human resource development</li>
+        <li>To promote health and wellness amongst students, staff & the community</li>
+        <li>To instil sensitivity amongst the youth towards the community and environment</li>
+        <li>To produce thought provoking leaders for the society</li></ul></em></p>
     </div>
   </div>
 </section>
