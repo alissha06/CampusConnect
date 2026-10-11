@@ -2038,16 +2038,20 @@ a.dashboard-item-title:hover {
 
 
 /* ===== Theme toggle + dark theme ===== */
+.nav-theme { display: flex; align-items: center; }
 .theme-toggle {
   background: transparent;
+  color: inherit;
   border: 1px solid currentColor;
   border-radius: 999px;
-  padding: 4px 12px;
+  padding: 5px 14px;
   font: inherit;
   font-size: 0.85rem;
+  line-height: 1;
   cursor: pointer;
-  color: inherit;
+  transition: background 0.2s;
 }
+.theme-toggle:hover { background: rgba(128, 128, 128, 0.15); }
 
 html[data-theme="dark"] {
   background: #fff;
@@ -2056,21 +2060,60 @@ html[data-theme="dark"] {
 html[data-theme="dark"] img,
 html[data-theme="dark"] video,
 html[data-theme="dark"] .item-photo-icon {
-  filter: invert(1) hue-rotate(180deg);   /* flip images back so they look normal */
+  filter: invert(1) hue-rotate(180deg);
 }
 
 /* ===== Academic calendar ===== */
-.cal-month { margin: 28px 0 10px; }
-.cal-item { display: flex; gap: 18px; background: #fff; border: 1px solid #e4e4e4; border-radius: 10px; padding: 14px 18px; }
-.cal-date { min-width: 190px; font-weight: 600; color: #444; }
-.cal-body h3 { margin: 6px 0 4px; }
+.cal-month { margin: 32px 0 12px; font-size: 1.4rem; }
+.cal-list { display: flex; flex-direction: column; gap: 12px; }
+
+.cal-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  background: #fff;
+  border: 1px solid #e4e4e4;
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.cal-date { flex: 0 0 200px; font-weight: 600; color: #444; padding-top: 2px; }
+.cal-body { flex: 1; min-width: 0; }
+.cal-body h3 { margin: 8px 0 4px; font-size: 1.05rem; }
 .cal-body p { margin: 0; color: #666; }
+
 .cal-past { opacity: 0.55; }
 .cal-now { border-color: #1a73e8; box-shadow: 0 0 0 1px #1a73e8; }
-.cal-tag { display: inline-block; font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-right: 6px; }
+
+.cal-tag { display: inline-block; font-size: 0.75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-right: 6px; }
 .cal-academic { background: #e8f0fe; color: #1a56c4; }
 .cal-exam { background: #fdecea; color: #b3261e; }
 .cal-holiday { background: #e6f4ea; color: #1e7a34; }
 .cal-event { background: #fff4e0; color: #a15c00; }
 .cal-ongoing { background: #1a73e8; color: #fff; }
-@media (max-width: 640px) { .cal-item { flex-direction: column; gap: 6px; } .cal-date { min-width: 0; } }
+
+/* Admin buttons: Edit and Delete side by side, same size */
+.cal-actions { display: flex; gap: 8px; flex: 0 0 auto; }
+.cal-actions form { margin: 0; }
+.cal-actions a,
+.cal-actions button {
+  display: inline-block;
+  padding: 7px 16px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: #fff;
+  color: #222;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cal-actions a:hover { background: #f3f3f3; }
+.cal-actions .cal-delete { border-color: #d9534f; color: #d9534f; }
+.cal-actions .cal-delete:hover { background: #d9534f; color: #fff; }
+
+@media (max-width: 640px) {
+  .cal-item { flex-direction: column; gap: 8px; }
+  .cal-date { flex: none; }
+}

@@ -709,22 +709,3 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-// ===== Theme toggle (light / dark), remembered in the browser =====
-document.addEventListener('DOMContentLoaded', function () {
-  const btn = document.getElementById('theme-toggle');
-  if (!btn) return;
-  const root = document.documentElement;
-
-  function paint() {
-    btn.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light mode' : 'Dark mode';
-  }
-  paint();
-
-  btn.addEventListener('click', function () {
-    const goingLight = root.getAttribute('data-theme') === 'dark';
-    if (goingLight) root.removeAttribute('data-theme');
-    else root.setAttribute('data-theme', 'dark');
-    try { localStorage.setItem('cc-theme', goingLight ? 'light' : 'dark'); } catch (e) {}
-    paint();
-  });
-});

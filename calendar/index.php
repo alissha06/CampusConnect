@@ -74,7 +74,7 @@ include '../includes/navbar.php';
 
     <?php foreach ($byMonth as $month => $rows): ?>
       <h2 class="cal-month"><?= htmlspecialchars($month) ?></h2>
-      <div class="dashboard-list">
+      <div class="cal-list">
       <?php foreach ($rows as $e):
           $endDate = $e['end_date'] ?: $e['start_date'];
           $state = $endDate < $today ? 'cal-past' : ($e['start_date'] <= $today ? 'cal-now' : '');

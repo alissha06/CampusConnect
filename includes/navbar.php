@@ -32,7 +32,6 @@ function navActive($dir, $file, $currentDir, $current) {
           <li><a href="<?php echo $root; ?>events/index.php">Events</a></li>
           <li><a href="<?php echo $root; ?>calendar/index.php">Academic Calendar</a></li>
           <li><a href="<?php echo $root; ?>feedback/index.php">Feedback</a></li>
-          <li><a href="<?php echo $root; ?>feedback/index.php">Feedback</a></li>
         </ul>
       </li>
    <li><button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch theme">Dark mode</button></li>
@@ -52,3 +51,24 @@ function navActive($dir, $file, $currentDir, $current) {
     </ul>
   </div>
 </nav>
+
+<script>
+(function () {
+  var btn = document.getElementById('theme-toggle');
+  if (!btn) return;
+  var root = document.documentElement;
+
+  function paint() {
+    btn.textContent = root.getAttribute('data-theme') === 'dark' ? 'Light mode' : 'Dark mode';
+  }
+  paint();
+
+  btn.addEventListener('click', function () {
+    var goingLight = root.getAttribute('data-theme') === 'dark';
+    if (goingLight) root.removeAttribute('data-theme');
+    else root.setAttribute('data-theme', 'dark');
+    try { localStorage.setItem('cc-theme', goingLight ? 'light' : 'dark'); } catch (e) {}
+    paint();
+  });
+})();
+</script>
