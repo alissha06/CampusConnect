@@ -2037,31 +2037,29 @@ a.dashboard-item-title:hover {
 .reply-form textarea { width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; font:inherit; }
 
 
-/* ===== Theme toggle + dark theme ===== */
+/* ===== Theme toggle (icon button) ===== */
 .nav-theme { display: flex; align-items: center; }
 .theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
   background: transparent;
   color: inherit;
   border: 1px solid currentColor;
-  border-radius: 999px;
-  padding: 5px 14px;
-  font: inherit;
-  font-size: 0.85rem;
-  line-height: 1;
+  border-radius: 50%;
   cursor: pointer;
   transition: background 0.2s;
 }
-.theme-toggle:hover { background: rgba(128, 128, 128, 0.15); }
+.theme-toggle:hover { background: rgba(128, 128, 128, 0.2); }
+.theme-toggle svg { display: block; }
 
-html[data-theme="dark"] {
-  background: #fff;
-  filter: invert(1) hue-rotate(180deg);
-}
-html[data-theme="dark"] img,
-html[data-theme="dark"] video,
-html[data-theme="dark"] .item-photo-icon {
-  filter: invert(1) hue-rotate(180deg);
-}
+/* moon in light mode, sun in dark mode */
+.theme-toggle .icon-sun { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 
 /* ===== Academic calendar ===== */
 .cal-month { margin: 32px 0 12px; font-size: 1.4rem; }
