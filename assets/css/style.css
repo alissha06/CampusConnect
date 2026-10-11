@@ -2060,7 +2060,16 @@ a.dashboard-item-title:hover {
 .theme-toggle .icon-sun { display: none; }
 html[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
 html[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
-
+/* ===== Dark theme: flips page colours ===== */
+html[data-theme="dark"] {
+  background: #fff;
+  filter: invert(1) hue-rotate(180deg);
+}
+html[data-theme="dark"] img,
+html[data-theme="dark"] video,
+html[data-theme="dark"] .item-photo-icon {
+  filter: invert(1) hue-rotate(180deg);
+}
 /* ===== Academic calendar ===== */
 .cal-month { margin: 32px 0 12px; font-size: 1.4rem; }
 .cal-list { display: flex; flex-direction: column; gap: 12px; }
