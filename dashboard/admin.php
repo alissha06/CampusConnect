@@ -31,6 +31,7 @@ include '../includes/navbar.php';
       <a href="../events/create.php" class="btn-outline-sm">+ Post an Event</a>
       <a href="../lostfound/index.php" class="btn-outline-sm">View Lost &amp; Found (<?= $itemCount ?> open)</a>
       <a href="../feedback/view.php" class="btn-outline-sm">View Feedback (<?= $fbCount ?>)</a>
+      <a href="../calendar/create.php" class="btn-outline-sm">+ Add Calendar Entry</a>
     </div>
 
     <div class="dashboard-list" style="margin-top:24px;">

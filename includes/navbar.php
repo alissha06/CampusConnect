@@ -30,10 +30,12 @@ function navActive($dir, $file, $currentDir, $current) {
         <button class="dropdown-toggle <?php echo ($currentDir === 'events' || $currentDir === 'feedback') ? 'active' : ''; ?>">More <span class="arrow">▾</span></button>
         <ul class="dropdown-menu">
           <li><a href="<?php echo $root; ?>events/index.php">Events</a></li>
+          <li><a href="<?php echo $root; ?>calendar/index.php">Academic Calendar</a></li>
+          <li><a href="<?php echo $root; ?>feedback/index.php">Feedback</a></li>
           <li><a href="<?php echo $root; ?>feedback/index.php">Feedback</a></li>
         </ul>
       </li>
-
+   <li><button type="button" id="theme-toggle" class="theme-toggle" aria-label="Switch theme">Dark mode</button></li>
       <?php if (isset($_SESSION['user_id'])): ?>
   <li class="dropdown">
     <button class="dropdown-toggle <?php echo ($currentDir === 'dashboard') ? 'active' : ''; ?>">

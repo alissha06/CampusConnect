@@ -2035,3 +2035,42 @@ a.dashboard-item-title:hover {
 
 .reply-form { margin-top:10px; display:flex; flex-direction:column; gap:8px; }
 .reply-form textarea { width:100%; padding:8px 10px; border:1px solid #ccc; border-radius:8px; font:inherit; }
+
+
+/* ===== Theme toggle + dark theme ===== */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: inherit;
+}
+
+html[data-theme="dark"] {
+  background: #fff;
+  filter: invert(1) hue-rotate(180deg);
+}
+html[data-theme="dark"] img,
+html[data-theme="dark"] video,
+html[data-theme="dark"] .item-photo-icon {
+  filter: invert(1) hue-rotate(180deg);   /* flip images back so they look normal */
+}
+
+/* ===== Academic calendar ===== */
+.cal-month { margin: 28px 0 10px; }
+.cal-item { display: flex; gap: 18px; background: #fff; border: 1px solid #e4e4e4; border-radius: 10px; padding: 14px 18px; }
+.cal-date { min-width: 190px; font-weight: 600; color: #444; }
+.cal-body h3 { margin: 6px 0 4px; }
+.cal-body p { margin: 0; color: #666; }
+.cal-past { opacity: 0.55; }
+.cal-now { border-color: #1a73e8; box-shadow: 0 0 0 1px #1a73e8; }
+.cal-tag { display: inline-block; font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; margin-right: 6px; }
+.cal-academic { background: #e8f0fe; color: #1a56c4; }
+.cal-exam { background: #fdecea; color: #b3261e; }
+.cal-holiday { background: #e6f4ea; color: #1e7a34; }
+.cal-event { background: #fff4e0; color: #a15c00; }
+.cal-ongoing { background: #1a73e8; color: #fff; }
+@media (max-width: 640px) { .cal-item { flex-direction: column; gap: 6px; } .cal-date { min-width: 0; } }
