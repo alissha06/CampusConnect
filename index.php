@@ -24,7 +24,7 @@
 
 <!-- ONE-LINE NOTICE BANNER -->
 <div class="notice-banner">
-  📢 <strong>Latest:</strong> Internal Examination Timetable — BCA Semesters II, IV &amp; VI
+  <strong>Latest:</strong> Internal Examination Timetable — BCA Semesters II, IV &amp; VI
   <a href="notices/index.php">View all Notices →</a>
 </div>
 
