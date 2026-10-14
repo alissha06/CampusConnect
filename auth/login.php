@@ -1,4 +1,9 @@
-<?php $root = '../'; ?>
+<?php
+session_start();
+$root = '../';
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['error']);   
+?>
 <?php include '../includes/header.php'; ?>
 <?php include '../includes/navbar.php'; ?>
 
@@ -18,9 +23,11 @@
       <p class="tagline">Sign in to access your dashboard and admission checklist.</p>
 
       <div class="form-success" id="login-success" style="display:none;">
-        ✓ Login successful. (Demo only: no real account exists yet.)
+        ✓ Login successful.
       </div>
-
+        <?php if ($error !== ''): ?>
+        <div class="form-error" role="alert"><?= htmlspecialchars($error) ?></div>
+      <?php endif; ?>
       <form id="login-form" method="post" action="login_process.php" novalidate>
 
         <div class="form-group">

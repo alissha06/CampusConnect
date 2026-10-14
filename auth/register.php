@@ -1,4 +1,9 @@
-<?php $root = '../'; ?>
+<?php
+session_start();
+$root = '../';
+$error = $_SESSION['error'] ?? '';
+unset($_SESSION['error']);
+?>
 <?php include '../includes/header.php'; ?>
 <?php include '../includes/navbar.php'; ?>
 
@@ -20,6 +25,12 @@
       <div class="form-success" id="register-success" style="display:none;">
          Account created. 
       </div>
+      
+      <?php if ($error !== ''): ?>
+        <div class="form-error" role="alert"><?= htmlspecialchars($error) ?></div>
+      <?php endif; ?>
+
+     
 
       <form id="register-form" method="post" action="register_process.php" novalidate>
 
