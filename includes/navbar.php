@@ -31,7 +31,7 @@ function navActive($dir, $file, $currentDir, $current) {
         <ul class="dropdown-menu">
           <li><a href="<?php echo $root; ?>events/index.php">Events</a></li>
           <li><a href="<?php echo $root; ?>calendar/index.php">Academic Calendar</a></li>
-          <li><a href="<?php echo $root; ?>feedback/index.php">Feedback</a></li>
+          <li><a href="<?php echo $root; ?>feedback/index.php">Feedback/Query</a></li>
         </ul>
       </li>
    

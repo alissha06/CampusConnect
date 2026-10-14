@@ -19,7 +19,7 @@ unset($_SESSION['error']);
   <div class="container">
     <div class="auth-card">
       <div class="auth-icon">🔒</div>
-      <h1>Student Login</h1>
+      <h1>Login</h1>
       <p class="tagline">Sign in to access your dashboard and admission checklist.</p>
 
       <div class="form-success" id="login-success" style="display:none;">

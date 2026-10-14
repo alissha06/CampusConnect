@@ -50,7 +50,7 @@ include '../includes/navbar.php';
 
 <section class="about-block">
   <div class="container">
-    <h2>My Feedback Tickets</h2>
+    <h2>My Feedback/Query Tickets</h2>
     <?php if (empty($myTickets)): ?>
       <p>You haven't submitted any feedback yet.</p>
     <?php endif; ?>
